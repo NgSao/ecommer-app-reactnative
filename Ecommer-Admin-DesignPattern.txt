@@ -1,0 +1,244 @@
+//Tổ chức file AdminDashboardScreen 
+src/
+├── components/
+│   ├── DashboardHeader.js       # Tiêu đề với thông tin người dùng
+│   ├── TabNavigation.js         # Tab "Tổng quan" và "Biểu đồ"
+│   ├── StatsCard.js             # Card hiển thị số liệu thống kê
+│   ├── QuickActions.js          # Các nút hành động nhanh
+│   ├── RecentOrders.js          # Danh sách đơn hàng gần đây
+│   ├── NotificationsList.js     # Danh sách thông báo
+│   ├── ChartSection.js          # Các biểu đồ thống kê
+├── hooks/
+│   ├── useAdminDashboard.js     # Hook quản lý dữ liệu và trạng thái
+├── styles/
+│   ├── AdminDashboardStyles.js  # Style cho AdminDashboardScreen
+├── utils/
+│   ├── dashboardUtils.js        # Các hàm hỗ trợ (getStatusColor, getNotificationIcon, v.v.)
+├── screens/
+│   └── admin/
+│       └── AdminDashboardScreen.js # File chính, kết hợp các components
+
+//Tổ chức file AdminProductsManagement 
+src/
+├── components/
+│   ├── ProductsHeader.js        # Tiêu đề với nút quay lại và các nút hành động
+│   ├── SearchBar.js             # Thanh tìm kiếm
+│   ├── StatsSection.js          # Phần thống kê
+│   ├── ProductItem.js           # Giao diện từng sản phẩm
+│   ├── EmptyState.js            # Giao diện khi không có dữ liệu
+├── hooks/
+│   ├── useProductsManagement.js # Hook quản lý dữ liệu và trạng thái
+├── styles/
+│   ├── AdminProductsStyles.js   # Style cho AdminProductsManagement
+├── screens/
+│   └── admin/
+│       └── AdminProductsManagement.js # File chính, kết hợp các components
+
+//Thêm và sửa product
+src/
+├── components/
+│   ├── ProductForm.js           # Form nhập thông tin sản phẩm (dùng chung)
+├── hooks/
+│   ├── useAddProduct.js         # Hook xử lý logic thêm sản phẩm
+│   ├── useEditProduct.js        # Hook xử lý logic chỉnh sửa sản phẩm
+├── styles/
+│   ├── AdminAddProductStyles.js # Style cho AdminAddProduct
+│   ├── AdminEditProductStyles.js # Style cho AdminEditProduct
+├── screens/
+│   └── admin/
+│       ├── AdminAddProduct.js   # Màn hình thêm sản phẩm
+│       └── AdminEditProduct.js  # Màn hình chỉnh sửa sản phẩm
+
+//Tổ chức file AdminOrdersManagement 
+src/
+├── components/
+│   ├── OrderItem.js             # Component hiển thị từng đơn hàng
+│   ├── StatusFilter.js          # Component hiển thị bộ lọc trạng thái
+│   ├── SearchBar.js             # Component thanh tìm kiếm
+│   ├── StatsSummary.js          # Component hiển thị thống kê
+├── hooks/
+│   ├── useOrdersManagement.js   # Hook chứa logic quản lý đơn hàng
+├── styles/
+│   ├── AdminOrdersManagementStyles.js  # Styles cho AdminOrdersManagement
+├── screens/
+│   ├── admin/
+│       ├── AdminOrdersManagement.js  # Màn hình chính, đã được tinh gọn
+
+//Tổ chức file AdminCreateOrder
+src/
+├── components/
+│   ├── CustomerSelector.js       # Component chọn khách hàng
+│   ├── ProductSelector.js        # Component chọn sản phẩm và biến thể
+│   ├── CartItem.js               # Component hiển thị sản phẩm trong giỏ hàng
+│   ├── PaymentInfo.js            # Component hiển thị thông tin thanh toán
+│   ├── PaymentMethodSelector.js  # Component chọn phương thức thanh toán
+├── hooks/
+│   ├── useCreateOrder.js         # Hook chứa logic tạo đơn hàng
+├── styles/
+│   ├── AdminCreateOrderStyles.js  # Styles cho AdminCreateOrder
+├── screens/
+│   ├── admin/
+│       ├── AdminCreateOrder.js    # Màn hình chính, đã được tinh gọn
+
+//Tổ chức file AdminOrderDetail
+src/
+├── components/
+│   ├── OrderStatus.js        # Component hiển thị trạng thái đơn hàng
+│   ├── OrderInfo.js          # Component hiển thị thông tin đơn hàng
+│   ├── CustomerInfo.js       # Component hiển thị thông tin khách hàng
+│   ├── ShippingAddress.js    # Component hiển thị địa chỉ giao hàng
+│   ├── OrderItems.js         # Component hiển thị danh sách sản phẩm
+│   ├── OrderSummary.js       # Component hiển thị tổng tiền
+│   ├── OrderNote.js          # Component hiển thị ghi chú
+├── hooks/
+│   ├── useOrderDetail.js     # Hook chứa logic chi tiết đơn hàng
+├── styles/
+│   ├── AdminOrderDetailStyles.js  # Styles cho AdminOrderDetail
+├── screens/
+│   ├── admin/
+│       ├── AdminOrderDetail.js    # Màn hình chính, đã được tinh gọn
+
+
+//Tổ chức file AdminCategoriesManagement
+src/
+├── components/
+│   ├── CategoryItem.js          # Component hiển thị từng danh mục
+│   ├── SearchBar.js             # Component thanh tìm kiếm
+│   ├── CategoryModal.js         # Component modal thêm/sửa danh mục
+│   ├── EmptyState.js            # Component trạng thái rỗng
+├── hooks/
+│   ├── useCategoriesManagement.js  # Hook chứa logic quản lý danh mục
+├── styles/
+│   ├── AdminCategoriesManagementStyles.js  # Styles cho AdminCategoriesManagement
+├── screens/
+│   ├── admin/
+│       ├── AdminCategoriesManagement.js    # Màn hình chính, đã được tinh gọn
+
+//Tổ chức file AdminPromotionsManagement
+src/
+├── components/
+│   ├── PromotionItem.js          # Component hiển thị từng khuyến mãi
+│   ├── SearchBar.js              # Component thanh tìm kiếm (tái sử dụng)
+│   ├── PromotionModal.js         # Component modal thêm/sửa khuyến mãi
+│   ├── EmptyState.js             # Component trạng thái rỗng (tái sử dụng)
+│   ├── StatsBar.js               # Component hiển thị thống kê
+│   ├── FilterBar.js              # Component bộ lọc trạng thái
+├── hooks/
+│   ├── usePromotionsManagement.js  # Hook chứa logic quản lý khuyến mãi
+├── styles/
+│   ├── AdminPromotionsManagementStyles.js  # Styles cho AdminPromotionsManagement
+├── screens/
+│   ├── admin/
+│       ├── AdminPromotionsManagement.js    # Màn hình chính, đã được tinh gọn
+
+//Tổ chức file AdminExportData
+src
+├── components/
+│   ├── ExportTypeOption.js       # Component hiển thị danh sách loại báo cáo
+│   ├── DateRangeOption.js        # Component hiển thị tùy chọn khoảng thời gian
+│   ├── FormatOption.js           # Component hiển thị tùy chọn định dạng xuất
+│   ├── CustomDatePicker.js       # Component quản lý ngày tùy chỉnh
+│   ├── AdminHeader.js            # Component header (đã có từ trước)
+├── hooks/
+│   ├── useExportData.js          # Hook chứa logic xuất báo cáo
+├── styles/
+│   ├── AdminExportDataStyles.js  # Styles cho AdminExportDataScreen
+├── screens/
+│   ├── admin/
+│       ├── AdminExportDataScreen.js  # Màn hình chính, đã được tinh gọn
+
+
+//Tổ chức file AdminCustomersManagement
+src/
+├── components/
+│   ├── CustomerItem.js               # Component hiển thị từng khách hàng
+│   ├── SearchFilter.js               # Component thanh tìm kiếm và bộ lọc trạng thái
+│   ├── CustomerStats.js              # Component hiển thị thống kê tổng quan
+│   ├── CustomerDetailModal.js        # Component modal chi tiết khách hàng
+│   ├── AdminHeader.js                # Component header (đã có từ trước)
+├── hooks/
+│   ├── useCustomerManagement.js      # Hook chứa logic quản lý khách hàng
+├── styles/
+│   ├── AdminCustomersManagementStyles.js  # Styles cho AdminCustomersManagement
+├── screens/
+│   ├── admin/
+│       ├── AdminCustomersManagement.js  # Màn hình chính, đã được tinh gọn
+
+//Tổ chức file AdminCustomersCreate
+src/
+├── components/
+│   ├── CustomerFormSection.js        # Component hiển thị các phần thông tin
+│   ├── FormInput.js                  # Component input field với validation
+│   ├── AdminHeader.js                # Component header (đã có từ trước)
+├── hooks/
+│   ├── useCreateCustomer.js          # Hook chứa logic tạo khách hàng
+├── styles/
+│   ├── AdminCreateCustomerStyles.js  # Styles cho AdminCreateCustomer
+├── screens/
+│   ├── admin/
+│       ├── AdminCreateCustomer.js    # Màn hình chính, đã được tinh gọn
+
+//Tổ chức file AdminSettings
+src/
+├── components/
+│   ├── AdminInfoCard.js              # Component hiển thị thông tin admin
+│   ├── StoreInfoSection.js           # Component thông tin cửa hàng
+│   ├── NotificationsSection.js       # Component cài đặt thông báo
+│   ├── ShippingSection.js            # Component cài đặt vận chuyển
+│   ├── PaymentSection.js             # Component cài đặt thanh toán
+├── hooks/
+│   ├── useAdminSettings.js           # Hook chứa logic quản lý cài đặt
+├── styles/
+│   ├── AdminSettingsStyles.js        # Styles cho AdminSettings
+├── screens/
+│   ├── admin/
+│       ├── AdminSettings.js          # Màn hình chính, đã được tinh gọn
+
+//Tổ chức file AdminReviewsManagement
+src/
+├── components/
+│   ├── AdminHeader.js                # Component header (đã có từ trước)
+│   ├── SearchBar.js                  # Component thanh tìm kiếm
+│   ├── FilterBar.js                  # Component bộ lọc
+│   ├── ReviewItem.js                 # Component hiển thị từng đánh giá
+│   ├── ReplyModal.js                 # Component modal phản hồi đánh giá
+│   ├── DetailModal.js                # Component modal chi tiết đánh giá
+│   ├── ImageViewerModal.js           # Component modal xem ảnh
+├── hooks/
+│   ├── useAdminReviews.js            # Hook chứa logic quản lý đánh giá
+├── styles/
+│   ├── AdminReviewsManagementStyles.js  # Styles cho AdminReviewsManagement
+├── screens/
+│   ├── admin/
+│       ├── AdminReviewsManagement.js # Màn hình chính, đã được tinh gọn
+
+
+//Tổ chức file AdminChatManagement
+
+src/
+├── components/
+│   ├── AdminHeader.js                # Component header (đã có từ trước)
+│   ├── SearchBar.js                  # Component thanh tìm kiếm
+│   ├── ConversationItem.js           # Component hiển thị từng cuộc trò chuyện
+│   ├── StatsHeader.js                # Component hiển thị số lượng và nút làm mới
+│   ├── EmptyList.js                  # Component hiển thị khi danh sách trống
+├── hooks/
+│   ├── useAdminChatManagement.js     # Hook chứa logic quản lý danh sách cuộc trò chuyện
+├── styles/
+│   ├── AdminChatManagementStyles.js  # Styles cho AdminChatManagement
+├── screens/
+│   ├── admin/
+│       ├── AdminChatManagement.js    # Màn hình chính, đã được tinh gọn
+src/
+├── components/
+│   ├── AdminHeader.js                # Component header (đã có từ trước)
+│   ├── MessageItem.js                # Component hiển thị từng tin nhắn
+│   ├── EmptyChat.js                  # Component hiển thị khi cuộc trò chuyện trống
+│   ├── ChatInput.js                  # Component phần nhập tin nhắn và gửi ảnh
+├── hooks/
+│   ├── useAdminChatDetail.js         # Hook chứa logic quản lý cuộc trò chuyện
+├── styles/
+│   ├── AdminChatDetailStyles.js      # Styles cho AdminChatDetail
+├── screens/
+│   ├── admin/
+│       ├── AdminChatDetail.js        # Màn hình chính, đã được tinh gọn
