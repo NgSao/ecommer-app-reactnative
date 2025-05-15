@@ -2,20 +2,6 @@ import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
 
-const API_URL = "http://192.168.1.111:8080/api/v1";
-
-export const API_URL_WEBSOCKER = `${API_URL}/public/chat-websocket`;
-export const API_URL_NOTIFICATION = `${API_URL}/public/notification-websocket`;
-
-
-const GHN_API_URL = "https://online-gateway.ghn.vn/shiip/public-api";
-const GHN_API_KEY = "4b6fa134-2fe4-11f0-a3f3-46738741c39b"
-const GHN_API_SECRET = "5775024";
-const OSRM_API_URL = "http://router.project-osrm.org";
-const GHTK_API_URL = "https://services.giaohangtietkiem.vn";
-const GHTK_TOKEN = "1VDsNCGG84Oy7bm3tDJUZgcwHowQbT8WwzPn6Q3";
-const PARTNER_CODE = "2425";
-
 
 
 export const showError = (message) => {
