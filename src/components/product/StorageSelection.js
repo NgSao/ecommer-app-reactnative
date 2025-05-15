@@ -6,34 +6,38 @@ const StorageSelection = ({
     handleStorageSelect,
     isVariantInStock,
     selectedColor,
-}) => (
-    <View style={styles.selectionContainer}>
-        <Text style={styles.selectionTitle}>Dung lượng</Text>
-        <View style={styles.optionsContainer}>
-            {availableStorageOptions.map((storage) => (
-                <TouchableOpacity
-                    key={storage}
-                    style={[
-                        styles.storageOption,
-                        selectedStorage === storage && styles.selectedOption,
-                        !isVariantInStock(selectedColor, storage) && styles.outOfStockOption,
-                    ]}
-                    onPress={() => handleStorageSelect(storage)}
-                >
-                    <Text
+}) => {
+    if (selectedStorage === null) return null;
+    return (
+        <View style={styles.selectionContainer}>
+            <Text style={styles.selectionTitle}>Dung lượng</Text>
+            <View style={styles.optionsContainer}>
+                {availableStorageOptions.map((storage) => (
+                    <TouchableOpacity
+                        key={storage}
                         style={[
-                            selectedStorage === storage ? styles.selectedOptionText : styles.optionText,
-                            !isVariantInStock(selectedColor, storage) && styles.outOfStockOptionText,
+                            styles.storageOption,
+                            selectedStorage === storage && styles.selectedOption,
+                            !isVariantInStock(selectedColor, storage) && styles.outOfStockOption,
                         ]}
+                        onPress={() => handleStorageSelect(storage)}
                     >
-                        {storage}
-                    </Text>
-                    {!isVariantInStock(selectedColor, storage) && <Text style={styles.outOfStockLabel}>Hết hàng</Text>}
-                </TouchableOpacity>
-            ))}
+                        <Text
+                            style={[
+                                selectedStorage === storage ? styles.selectedOptionText : styles.optionText,
+                                !isVariantInStock(selectedColor, storage) && styles.outOfStockOptionText,
+                            ]}
+                        >
+                            {storage}
+                        </Text>
+                        {!isVariantInStock(selectedColor, storage) && <Text style={styles.outOfStockLabel}>Hết hàng</Text>}
+                    </TouchableOpacity>
+                ))}
+            </View>
+
         </View>
-    </View>
-)
+    )
+}
 
 const styles = StyleSheet.create({
     selectionContainer: {

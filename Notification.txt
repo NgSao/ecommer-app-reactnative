@@ -1,0 +1,41 @@
+Khách hàng  ORDER .flagData= CUSTOMER ->
+
+if (flagData===CUSTOMER) {
+    GỬI CHO người dùng
+} else
+
+
+
+Client 1 giao diện
+1 context:
+if (Customer) {
+    Gửi cho người dùng
+    /userId
+} else ()
+{
+    tất cả
+}
+
+
+//Client
+nếu vaitro là admin:
+
+
+
+
+
+nếu là nhân viên:
+
+
+
+
+nếu vaitro là kahcs hàng:
+đăng kí--> gửi cho admin  :topic/notifications
+
+
+
+ đăng nhập, mua hàng, hủy đơn hàng--> gửi cho nhân viên và admin  :topic/notifications/userId
+
+ thay đổi trạng thái tất cả: :topic/notifications/userId
+
+

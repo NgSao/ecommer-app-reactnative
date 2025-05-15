@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from "react-native"
-import { formatCurrency } from '@utils/formatUtils';
+import { formatPrice } from '@utils/formatUtils';
 
 const OrderSummary = ({ order }) => {
     return (
@@ -7,25 +7,25 @@ const OrderSummary = ({ order }) => {
             <Text style={styles.sectionTitle}>Tổng cộng</Text>
             <View style={styles.summaryRow}>
                 <Text style={styles.summaryLabel}>Tạm tính:</Text>
-                <Text style={styles.summaryValue}>{formatCurrency(order.subtotal)}</Text>
+                <Text style={styles.summaryValue}>{formatPrice(order.total)}</Text>
             </View>
             <View style={styles.summaryRow}>
                 <Text style={styles.summaryLabel}>Phí vận chuyển:</Text>
-                <Text style={styles.summaryValue}>{formatCurrency(order.shippingFee)}</Text>
+                <Text style={styles.summaryValue}>{formatPrice(order.shipping.fee)}</Text>
             </View>
             {order.discount > 0 && (
                 <View style={styles.summaryRow}>
                     <Text style={styles.summaryLabel}>Giảm giá:</Text>
-                    <Text style={[styles.summaryValue, { color: "#e30019" }]}>-{formatCurrency(order.discount)}</Text>
+                    <Text style={[styles.summaryValue, { color: "#e30019" }]}>-{formatPrice(order.discount)}</Text>
                 </View>
             )}
             <View style={styles.summaryRow}>
                 <Text style={styles.summaryLabel}>Thuế (VAT):</Text>
-                <Text style={styles.summaryValue}>{formatCurrency(order.tax)}</Text>
+                <Text style={styles.summaryValue}>0 đ</Text>
             </View>
             <View style={[styles.summaryRow, styles.totalRow]}>
                 <Text style={styles.totalLabel}>Tổng cộng:</Text>
-                <Text style={styles.totalValue}>{formatCurrency(order.total)}</Text>
+                <Text style={styles.totalValue}>{formatPrice(order.total)}</Text>
             </View>
         </View>
     )

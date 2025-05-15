@@ -1,6 +1,6 @@
 import { Modal, View, Text, TouchableOpacity, FlatList, TextInput, Image, StyleSheet } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
-import { formatCurrency } from '@utils/formatUtils';
+import { formatPrice } from '@utils/formatUtils';
 
 const ProductSelector = ({
     showProductModal,
@@ -79,14 +79,13 @@ const ProductSelector = ({
                             ) : (
                                 <FlatList
                                     data={products}
-                                    keyExtractor={(item) => item.id.toString()}
+                                    keyExtractor={(item) => item.id}
                                     renderItem={({ item }) => (
                                         <TouchableOpacity
                                             style={styles.productItem}
                                             onPress={() => {
                                                 setSelectedProduct(item)
                                                 if (item.variants && item.variants.length > 0) {
-                                                    // Nếu có biến thể, hiển thị danh sách biến thể
                                                 } else {
                                                     setSelectedVariant(null)
                                                 }
@@ -95,7 +94,15 @@ const ProductSelector = ({
                                             <Image source={{ uri: item.image }} style={styles.productImage} />
                                             <View style={styles.productInfo}>
                                                 <Text style={styles.productName}>{item.name}</Text>
-                                                <Text style={styles.productPrice}>{formatCurrency(item.price)}</Text>
+                                                {item.salePrice && item.salePrice < item.originalPrice ? (
+                                                    <View style={styles.priceContainer}>
+                                                        <Text style={styles.productPrice}>{formatPrice(item.salePrice)}</Text>
+                                                        <Text style={styles.productOriginalPrice}>{formatPrice(item.originalPrice)}</Text>
+                                                    </View>
+                                                ) : (
+                                                    <Text style={styles.productPrice}>{formatPrice(item.originalPrice)}</Text>
+                                                )}
+
                                                 {item.variants && item.variants.length > 0 ? (
                                                     <Text style={styles.variantCount}>{item.variants.length} phiên bản</Text>
                                                 ) : (
@@ -120,7 +127,14 @@ const ProductSelector = ({
                                 <Image source={{ uri: selectedProduct.image }} style={styles.selectedProductImage} />
                                 <View style={styles.selectedProductInfo}>
                                     <Text style={styles.selectedProductName}>{selectedProduct.name}</Text>
-                                    <Text style={styles.selectedProductPrice}>{formatCurrency(selectedProduct.price)}</Text>
+                                    {selectedProduct.salePrice && selectedProduct.salePrice < selectedProduct.originalPrice ? (
+                                        <View style={styles.priceContainer}>
+                                            <Text style={styles.productPrice}>{formatPrice(selectedProduct.salePrice)}</Text>
+                                            <Text style={styles.productOriginalPrice}>{formatPrice(selectedProduct.originalPrice)}</Text>
+                                        </View>
+                                    ) : (
+                                        <Text style={styles.productPrice}>{formatPrice(selectedProduct.originalPrice)}</Text>
+                                    )}
                                 </View>
                             </View>
 
@@ -128,7 +142,7 @@ const ProductSelector = ({
 
                             <FlatList
                                 data={selectedProduct.variants}
-                                keyExtractor={(item) => item.id.toString()}
+                                keyExtractor={(item) => item.id}
                                 renderItem={({ item }) => (
                                     <TouchableOpacity
                                         style={[
@@ -137,9 +151,20 @@ const ProductSelector = ({
                                         ]}
                                         onPress={() => setSelectedVariant(item)}
                                     >
+                                        <Image source={{ uri: item.image }} style={styles.variantImage} />
+
                                         <View style={styles.variantInfo}>
                                             <Text style={styles.variantName}>{item.name}</Text>
-                                            <Text style={styles.variantPrice}>{formatCurrency(item.price)}</Text>
+
+                                            {item.salePrice && item.salePrice < item.originalPrice ? (
+                                                <View style={styles.priceContainer}>
+                                                    <Text style={styles.variantPrice}>{formatPrice(item.salePrice)}</Text>
+                                                    <Text style={styles.productOriginalPrice}>{formatPrice(item.originalPrice)}</Text>
+                                                </View>
+                                            ) : (
+                                                <Text style={styles.variantPrice}>{formatPrice(item.originalPrice)}</Text>
+                                            )}
+
                                         </View>
                                         <Text style={styles.variantStock}>Còn {item.stock}</Text>
                                         {selectedVariant && selectedVariant.id === item.id && (
@@ -148,33 +173,33 @@ const ProductSelector = ({
                                     </TouchableOpacity>
                                 )}
                             />
-
                             <View style={styles.quantityContainer}>
                                 <Text style={styles.quantityLabel}>Số lượng:</Text>
                                 <View style={styles.quantityControls}>
                                     <TouchableOpacity
                                         style={styles.quantityButton}
-                                        onPress={() => setQuantity(Math.max(1, Number.parseInt(quantity) - 1).toString())}
+                                        onPress={() => setQuantity((prevQuantity) => Math.max(1, prevQuantity - 1))}
                                     >
                                         <Ionicons name="remove" size={20} color="#333" />
                                     </TouchableOpacity>
                                     <TextInput
                                         style={styles.quantityInput}
-                                        value={quantity}
+                                        value={String(quantity)}
                                         onChangeText={(text) => {
-                                            const value = text.replace(/[^0-9]/g, "")
-                                            setQuantity(value === "" ? "1" : value)
+                                            const newValue = text.replace(/[^0-9]/g, "");
+                                            setQuantity(newValue === "" ? 1 : Math.max(1, parseInt(newValue, 10)));
                                         }}
                                         keyboardType="number-pad"
                                     />
                                     <TouchableOpacity
                                         style={styles.quantityButton}
-                                        onPress={() => setQuantity((Number.parseInt(quantity) + 1).toString())}
+                                        onPress={() => setQuantity((prevQuantity) => prevQuantity + 1)}
                                     >
                                         <Ionicons name="add" size={20} color="#333" />
                                     </TouchableOpacity>
                                 </View>
                             </View>
+
 
                             <TouchableOpacity
                                 style={[styles.addToCartButton, !selectedVariant && styles.disabledButton]}
@@ -191,7 +216,17 @@ const ProductSelector = ({
                                 <Image source={{ uri: selectedProduct.image }} style={styles.selectedProductImage} />
                                 <View style={styles.selectedProductInfo}>
                                     <Text style={styles.selectedProductName}>{selectedProduct.name}</Text>
-                                    <Text style={styles.selectedProductPrice}>{formatCurrency(selectedProduct.price)}</Text>
+
+                                    {selectedProduct.salePrice && selectedProduct.salePrice < selectedProduct.originalPrice ? (
+                                        <View style={styles.priceContainer}>
+                                            <Text style={styles.productPrice}>{formatPrice(selectedProduct.salePrice)}</Text>
+                                            <Text style={styles.productOriginalPrice}>{formatPrice(selectedProduct.originalPrice)}</Text>
+                                        </View>
+                                    ) : (
+                                        <Text style={styles.productPrice}>{formatPrice(selectedProduct.originalPrice)}</Text>
+                                    )}
+
+
                                     <Text style={styles.stockCount}>Còn {selectedProduct.stock} sản phẩm</Text>
                                 </View>
                             </View>
@@ -201,7 +236,7 @@ const ProductSelector = ({
                                 <View style={styles.quantityControls}>
                                     <TouchableOpacity
                                         style={styles.quantityButton}
-                                        onPress={() => setQuantity(Math.max(1, Number.parseInt(quantity) - 1).toString())}
+                                        onPress={() => setQuantity(Math.max(1, Number.parseInt(quantity) - 1))}
                                     >
                                         <Ionicons name="remove" size={20} color="#333" />
                                     </TouchableOpacity>
@@ -216,7 +251,7 @@ const ProductSelector = ({
                                     />
                                     <TouchableOpacity
                                         style={styles.quantityButton}
-                                        onPress={() => setQuantity((Number.parseInt(quantity) + 1).toString())}
+                                        onPress={() => setQuantity((Number.parseInt() + 1))}
                                     >
                                         <Ionicons name="add" size={20} color="#333" />
                                     </TouchableOpacity>
@@ -323,11 +358,7 @@ const styles = StyleSheet.create({
         color: "#333",
         marginBottom: 3,
     },
-    productPrice: {
-        fontSize: 13,
-        color: "#e30019",
-        marginBottom: 3,
-    },
+
     variantCount: {
         fontSize: 12,
         color: "#3498db",
@@ -377,6 +408,12 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: "#eee",
     },
+    variantImage: {
+        width: 60,
+        height: 60,
+        borderRadius: 8,
+        marginRight: 10,
+    },
     selectedVariantItem: {
         backgroundColor: "#fff3f3",
     },
@@ -393,7 +430,7 @@ const styles = StyleSheet.create({
         color: "#e30019",
     },
     variantStock: {
-        fontSize: 12,
+        fontSize: 13,
         color: "#2ecc71",
         marginRight: 10,
     },
@@ -440,6 +477,26 @@ const styles = StyleSheet.create({
     disabledButton: {
         opacity: 0.7,
     },
+    priceContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 5,
+    },
+    productSalePrice: {
+        color: '#e30019',
+        fontWeight: 'bold',
+        marginRight: 8,
+    },
+    productOriginalPrice: {
+        color: '#999',
+        textDecorationLine: 'line-through',
+        marginLeft: 8,
+    },
+    productPrice: {
+        color: '#e30019',
+        marginRight: 8,
+    },
+
 })
 
 export default ProductSelector

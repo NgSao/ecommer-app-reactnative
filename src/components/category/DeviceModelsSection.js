@@ -4,13 +4,13 @@ const DeviceModelsSection = ({ selectedCategory, navigateToProductList }) => (
     <View style={styles.subcategorySection}>
         <Text style={styles.sectionTitle}>Dòng máy</Text>
         <View style={styles.deviceModelsGrid}>
-            {selectedCategory.subcategories.map((subcat) => (
+            {selectedCategory.children.map((subcat) => (
                 <TouchableOpacity
                     key={subcat.id}
                     style={styles.deviceModelItem}
                     onPress={() => navigateToProductList(selectedCategory, subcat)}
                 >
-                    <Image source={{ uri: subcat.image }} style={styles.deviceModelImage} resizeMode="contain" />
+                    <Image source={{ uri: subcat.imageUrl }} style={styles.deviceModelImage} resizeMode="contain" />
                     <Text style={styles.deviceModelName}>{subcat.name}</Text>
                 </TouchableOpacity>
             ))}

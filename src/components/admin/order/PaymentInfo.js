@@ -34,7 +34,7 @@ const PaymentInfo = ({ subtotal, shippingFee, setShippingFee, discount, setDisco
             </View>
 
             <View style={styles.paymentRow}>
-                <Text style={styles.paymentLabel}>Thuế (VAT 10%):</Text>
+                <Text style={styles.paymentLabel}>Thuế (VAT 0%):</Text>
                 <Text style={styles.paymentValue}>{formatCurrency(tax)}</Text>
             </View>
 

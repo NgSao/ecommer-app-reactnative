@@ -1,6 +1,7 @@
-import { Modal, View, ScrollView, Text, Image, TouchableOpacity, ActivityIndicator, StyleSheet } from "react-native"
+import { Modal, View, ScrollView, Text, Image, TouchableOpacity, ActivityIndicator, StyleSheet, Alert } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
-import { formatDate } from '@utils/formatUtils';
+import { formatDate, formatDateFull } from '@utils/formatUtils';
+import { formatPrice } from '@utils/formatUtils';
 
 const CustomerDetailModal = ({
     modalVisible,
@@ -9,15 +10,17 @@ const CustomerDetailModal = ({
     customerOrders,
     loadingCustomerDetails,
     handleToggleStatus,
+    handleChangeRole,
+    roleOptions,
     navigation,
 }) => {
     const getStatusColor = (status) => {
         switch (status) {
-            case "active":
+            case "ACTIVE":
                 return "#2ecc71"
-            case "inactive":
+            case "INACTIVE":
                 return "#e74c3c"
-            case "new":
+            case "BLOCKED":
                 return "#3498db"
             default:
                 return "#7f8c8d"
@@ -26,12 +29,12 @@ const CustomerDetailModal = ({
 
     const getStatusText = (status) => {
         switch (status) {
-            case "active":
+            case "ACTIVE":
                 return "Hoạt động"
-            case "inactive":
-                return "Không hoạt động"
-            case "new":
-                return "Mới"
+            case "INACTIVE":
+                return "Chưa kích hoạt"
+            case "BLOCKED":
+                return "Đã bị khóa"
             default:
                 return "Không xác định"
         }
@@ -39,20 +42,80 @@ const CustomerDetailModal = ({
 
     const getOrderStatusColor = (status) => {
         switch (status) {
-            case "Chờ xử lý":
+            case "PENDING":
                 return "#f39c12"
-            case "Đang xử lý":
+            case "CONFIRMED":
                 return "#3498db"
-            case "Đang giao":
+            case "SHIPPED":
                 return "#9b59b6"
-            case "Đã giao":
+            case "DELIVERED":
                 return "#2ecc71"
-            case "Đã hủy":
+            case "CANCELLED":
                 return "#e74c3c"
             default:
                 return "#7f8c8d"
         }
     }
+
+    const getOrderStatusText = (status) => {
+        switch (status) {
+            case "PENDING":
+                return "Đang xử lý";
+            case "CONFIRMED":
+                return "Đã xác nhận";
+            case "SHIPPED":
+                return "Đã giao hàng";
+            case "DELIVERED":
+                return "Đã giao thành công";
+            case "CANCELLED":
+                return "Đã hủy";
+            default:
+                return "Không xác định";
+        }
+    };
+    const activeAddress = selectedCustomer?.addresses?.find(addr => addr.active);
+
+    const recentOrders = selectedCustomer?.orders
+        ? [...selectedCustomer.orders]
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .slice(0, 3)
+        : [];
+
+
+
+    const getRoleText = (role) => {
+        const roleOption = roleOptions.find((r) => r.id === role);
+        return roleOption ? roleOption.label : "Không xác định";
+    };
+
+    const getRoleColor = (role) => {
+        switch (role) {
+            case "CUSTOMER":
+                return "#3498db";
+            case "STAFF":
+                return "#f1c40f";
+            case "ADMIN":
+                return "#e74c3c";
+            default:
+                return "#7f8c8d";
+        }
+    };
+
+    const handleRoleChange = () => {
+        const currentRole = selectedCustomer.role;
+        let newRole;
+
+        if (currentRole === "CUSTOMER") {
+            newRole = "STAFF";
+        } else if (currentRole === "STAFF") {
+            newRole = "CUSTOMER";
+        } else {
+            Alert.alert("Thông báo", "Không thể thay đổi quyền cho tài khoản này.");
+            return;
+        }
+
+        handleChangeRole(selectedCustomer.id, selectedCustomer.email, newRole);
+    };
 
     return (
         <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={() => setModalVisible(false)}>
@@ -65,19 +128,30 @@ const CustomerDetailModal = ({
                         </TouchableOpacity>
                     </View>
 
+
                     {selectedCustomer && (
                         <ScrollView>
+                            <View style={styles.customerStatsRole}>
+                                <View style={styles.statItemRole}>
+                                    <Text style={[styles.statValueRole, { color: getRoleColor(selectedCustomer.role) }]}>
+                                        {getRoleText(selectedCustomer.role)}
+                                    </Text>
+                                </View>
+
+                            </View>
                             <View style={styles.customerDetailHeader}>
                                 <Image
                                     source={{
-                                        uri:
-                                            selectedCustomer.avatar ||
-                                            "https://ui-avatars.com/api/?name=" + encodeURIComponent(selectedCustomer.name),
+                                        uri: selectedCustomer.profileImageUrl || "https://tophinhanh.net/wp-content/uploads/2024/01/avatar-mau-do-7.jpg"
                                     }}
                                     style={styles.detailAvatar}
                                 />
                                 <View style={styles.customerDetailInfo}>
-                                    <Text style={styles.detailName}>{selectedCustomer.name}</Text>
+                                    <Text style={styles.detailName}>{selectedCustomer.fullName}</Text>
+                                    <View style={styles.detailRow}>
+                                        <Text style={styles.detailText}>{selectedCustomer.email}</Text>
+                                    </View>
+
                                     <View
                                         style={[styles.detailStatusBadge, { backgroundColor: getStatusColor(selectedCustomer.status) }]}
                                     >
@@ -96,52 +170,60 @@ const CustomerDetailModal = ({
                                     <Ionicons name="call-outline" size={18} color="#666" />
                                     <Text style={styles.detailText}>{selectedCustomer.phone}</Text>
                                 </View>
-                                {selectedCustomer.address && (
+                                {activeAddress ? (
                                     <View style={styles.detailRow}>
                                         <Ionicons name="location-outline" size={18} color="#666" />
-                                        <Text style={styles.detailText}>{selectedCustomer.address}</Text>
+                                        <Text style={styles.detailText}>
+                                            {`${activeAddress.addressDetail}, ${activeAddress.street}, ${activeAddress.district}, ${activeAddress.city}`}
+                                        </Text>
+                                    </View>
+                                ) : (
+                                    <View style={styles.detailRow}>
+                                        <Ionicons name="location-outline" size={18} color="#666" />
+                                        <Text style={styles.detailText}>Chưa có địa chỉ</Text>
                                     </View>
                                 )}
+
+
                             </View>
 
                             <View style={styles.detailSection}>
                                 <Text style={styles.sectionTitle}>Thông tin tài khoản</Text>
                                 <View style={styles.detailRow}>
                                     <Ionicons name="calendar-outline" size={18} color="#666" />
-                                    <Text style={styles.detailText}>Ngày đăng ký: {formatDate(selectedCustomer.createdAt)}</Text>
+                                    <Text style={styles.detailText}>Ngày đăng ký: {formatDateFull(selectedCustomer.createdAt)}</Text>
                                 </View>
                                 <View style={styles.detailRow}>
                                     <Ionicons name="time-outline" size={18} color="#666" />
                                     <Text style={styles.detailText}>
                                         Đăng nhập gần nhất:{" "}
-                                        {selectedCustomer.lastLogin ? formatDate(selectedCustomer.lastLogin) : "Chưa đăng nhập"}
+                                        {selectedCustomer.lastLoginDate ? formatDateFull(selectedCustomer.lastLoginDate) : "Chưa đăng nhập"}
                                     </Text>
                                 </View>
                             </View>
+
+
 
                             <View style={styles.detailSection}>
                                 <Text style={styles.sectionTitle}>Thống kê mua hàng</Text>
                                 <View style={styles.statsRow}>
                                     <View style={styles.detailStatItem}>
-                                        <Text style={styles.detailStatValue}>{selectedCustomer.orderCount}</Text>
                                         <Text style={styles.detailStatLabel}>Tổng đơn</Text>
+                                        <Text style={styles.detailStatValue}>{selectedCustomer.totalOrders}</Text>
                                     </View>
                                     <View style={styles.detailStatItem}>
-                                        <Text style={styles.detailStatValue}>
-                                            {selectedCustomer.totalSpent.toLocaleString("vi-VN")}đ
-                                        </Text>
                                         <Text style={styles.detailStatLabel}>Chi tiêu</Text>
+                                        <Text style={styles.detailStatValue}>
+                                            {formatPrice(selectedCustomer.totalPrice)}
+                                        </Text>
                                     </View>
                                     <View style={styles.detailStatItem}>
-                                        <Text style={styles.detailStatValue}>
-                                            {selectedCustomer.orderCount > 0
-                                                ? Math.round(selectedCustomer.totalSpent / selectedCustomer.orderCount).toLocaleString(
-                                                    "vi-VN",
-                                                )
-                                                : 0}
-                                            đ
-                                        </Text>
                                         <Text style={styles.detailStatLabel}>Trung bình/đơn</Text>
+                                        <Text style={styles.detailStatValue}>
+                                            {selectedCustomer.totalOrders > 0
+                                                ? formatPrice(selectedCustomer.totalPrice / selectedCustomer.totalOrders)
+                                                : 0}
+                                        </Text>
                                     </View>
                                 </View>
                             </View>
@@ -149,37 +231,38 @@ const CustomerDetailModal = ({
                             <View style={styles.detailSection}>
                                 <View style={styles.sectionHeader}>
                                     <Text style={styles.sectionTitle}>Lịch sử đơn hàng</Text>
-                                    <TouchableOpacity
+                                    {/* <TouchableOpacity
                                         onPress={() =>
                                             navigation.navigate("AdminCustomerOrders", { customerId: selectedCustomer.id })
                                         }
                                     >
                                         <Text style={styles.viewAllText}>Xem tất cả</Text>
-                                    </TouchableOpacity>
+                                    </TouchableOpacity> */}
                                 </View>
 
                                 {loadingCustomerDetails ? (
                                     <ActivityIndicator size="small" color="#e30019" style={{ marginVertical: 20 }} />
-                                ) : customerOrders.length === 0 ? (
-                                    <Text style={styles.emptyOrdersText}>Khách hàng chưa có đơn hàng nào</Text>
-                                ) : (
-                                    customerOrders.slice(0, 3).map((order) => (
-                                        <View key={order.id} style={styles.orderItem}>
+                                ) : recentOrders.length > 0 ? (
+                                    recentOrders.map((order) => (
+                                        <View key={order.orderCode} style={styles.orderItem}>
                                             <View style={styles.orderHeader}>
-                                                <Text style={styles.orderId}>#{order.id}</Text>
+                                                <Text style={styles.orderId}>#{order.orderCode}</Text>
                                                 <View
-                                                    style={[styles.orderStatusBadge, { backgroundColor: getOrderStatusColor(order.status) }]}
+                                                    style={[styles.orderStatusBadge, { backgroundColor: getOrderStatusColor(order.orderStatus) }]}
                                                 >
-                                                    <Text style={styles.orderStatusText}>{order.status}</Text>
+                                                    <Text style={styles.orderStatusText}>{getOrderStatusText(order.orderStatus)}</Text>
                                                 </View>
                                             </View>
                                             <View style={styles.orderInfo}>
-                                                <Text style={styles.orderDate}>{formatDate(order.date)}</Text>
-                                                <Text style={styles.orderTotal}>{order.total.toLocaleString("vi-VN")}đ</Text>
+                                                <Text style={styles.orderDate}>{formatDateFull(order.createdAt)}</Text>
+                                                <Text style={styles.orderTotal}>{formatPrice(order.total)}</Text>
                                             </View>
                                         </View>
                                     ))
+                                ) : (
+                                    <Text style={styles.emptyOrdersText}>Khách hàng chưa có đơn hàng nào</Text>
                                 )}
+
                             </View>
 
                             <View style={styles.actionButtonsContainer}>
@@ -195,7 +278,7 @@ const CustomerDetailModal = ({
                                 <TouchableOpacity
                                     style={[
                                         styles.modalActionButton,
-                                        selectedCustomer.status === "active" ? styles.deactivateButton : styles.activateButton,
+                                        selectedCustomer.status === "ACTIVE" ? styles.deactivateButton : styles.activateButton,
                                     ]}
                                     onPress={() => {
                                         setModalVisible(false)
@@ -203,7 +286,20 @@ const CustomerDetailModal = ({
                                     }}
                                 >
                                     <Text style={styles.modalActionButtonText}>
-                                        {selectedCustomer.status === "active" ? "Vô hiệu hóa tài khoản" : "Kích hoạt tài khoản"}
+                                        {selectedCustomer.status === "ACTIVE" ? "Vô hiệu hóa tài khoản" : "Kích hoạt tài khoản"}
+                                    </Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    style={[styles.modalActionButton, styles.roleButton]}
+                                    onPress={handleRoleChange}
+                                >
+                                    <Text style={styles.modalActionButtonText}>
+                                        {selectedCustomer.role === "CUSTOMER"
+                                            ? "Nâng quyền thành Nhân viên"
+                                            : selectedCustomer.role === "STAFF"
+                                                ? "Hạ quyền thành Khách hàng"
+                                                : "Thay đổi quyền"}
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -266,12 +362,14 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#333",
         marginBottom: 5,
+        marginLeft: 10,
     },
     detailStatusBadge: {
         alignSelf: "flex-start",
         paddingHorizontal: 10,
         paddingVertical: 5,
         borderRadius: 15,
+        marginLeft: 10,
     },
     detailStatusText: {
         fontSize: 12,
@@ -311,12 +409,14 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
     statsRow: {
-        flexDirection: "row",
-        justifyContent: "space-between",
+        marginTop: 10,
     },
     detailStatItem: {
-        alignItems: "center",
         flex: 1,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: 5,
     },
     detailStatValue: {
         fontSize: 16,
@@ -324,9 +424,10 @@ const styles = StyleSheet.create({
         color: "#333",
     },
     detailStatLabel: {
-        fontSize: 12,
+        fontSize: 14,
         color: "#666",
-        marginTop: 5,
+        fontWeight: "bold",
+
     },
     emptyOrdersText: {
         fontSize: 14,
@@ -400,6 +501,36 @@ const styles = StyleSheet.create({
     },
     activateButton: {
         backgroundColor: "#2ecc71",
+    },
+    roleButton: {
+        backgroundColor: "#f1c40f",
+    },
+    viewButton: {
+        backgroundColor: "#3498db",
+    },
+    customerStatsRole: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        borderTopColor: "#eee",
+        marginBottom: 10,
+    },
+    statItemRole: {
+        flex: 1,
+    },
+    statValueRole: {
+        fontSize: 18,
+        fontWeight: "bold",
+        color: "#333",
+    },
+    statLabelRole: {
+        fontSize: 12,
+        color: "#666",
+        marginTop: 5,
+    },
+    statItem: {
+        flex: 1,
+        alignItems: "center",
     },
 })
 

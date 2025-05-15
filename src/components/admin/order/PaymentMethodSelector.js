@@ -1,33 +1,42 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 
+const paymentMethods = [
+    { id: "cod", title: "Thanh toán khi nhận hàng (COD)", description: "Thanh toán bằng tiền mặt khi nhận hàng", icon: "cash-outline" },
+    { id: "bank", title: "Chuyển khoản ngân hàng", description: "Thanh toán qua tài khoản ngân hàng", icon: "card-outline" },
+    { id: "vnpay", title: "Thanh toán qua VNPAY", description: "Thanh toán qua ví điện tử VNPAY", icon: "wallet-outline" },
+]
+
 const PaymentMethodSelector = ({ paymentMethod, setPaymentMethod }) => {
     return (
         <View style={styles.section}>
             <Text style={styles.sectionTitle}>Phương thức thanh toán</Text>
 
             <View style={styles.paymentMethods}>
-                <TouchableOpacity
-                    style={[styles.paymentMethodItem, paymentMethod === "COD" && styles.selectedPaymentMethod]}
-                    onPress={() => setPaymentMethod("COD")}
-                >
-                    <Ionicons name="cash-outline" size={24} color={paymentMethod === "COD" ? "#e30019" : "#666"} />
-                    <Text style={[styles.paymentMethodText, paymentMethod === "COD" && styles.selectedPaymentMethodText]}>
-                        Thanh toán khi nhận hàng (COD)
-                    </Text>
-                    {paymentMethod === "COD" && <Ionicons name="checkmark-circle" size={20} color="#e30019" />}
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={[styles.paymentMethodItem, paymentMethod === "BANK" && styles.selectedPaymentMethod]}
-                    onPress={() => setPaymentMethod("BANK")}
-                >
-                    <Ionicons name="card-outline" size={24} color={paymentMethod === "BANK" ? "#e30019" : "#666"} />
-                    <Text style={[styles.paymentMethodText, paymentMethod === "BANK" && styles.selectedPaymentMethodText]}>
-                        Chuyển khoản ngân hàng
-                    </Text>
-                    {paymentMethod === "BANK" && <Ionicons name="checkmark-circle" size={20} color="#e30019" />}
-                </TouchableOpacity>
+                {paymentMethods.map((method) => (
+                    <TouchableOpacity
+                        key={method.id}
+                        style={[styles.paymentMethodItem, paymentMethod === method.id && styles.selectedPaymentMethod]}
+                        onPress={() => setPaymentMethod(method.id)}
+                    >
+                        <Ionicons
+                            name={method.icon}
+                            size={24}
+                            color={paymentMethod === method.id ? "#e30019" : "#666"}
+                        />
+                        <View style={{ flex: 1 }}>
+                            <Text
+                                style={[styles.paymentMethodText, paymentMethod === method.id && styles.selectedPaymentMethodText]}
+                            >
+                                {method.title}
+                            </Text>
+                            <Text style={[styles.paymentMethodText, { fontSize: 12, color: "#666" }]}>
+                                {method.description}
+                            </Text>
+                        </View>
+                        {paymentMethod === method.id && <Ionicons name="checkmark-circle" size={20} color="#e30019" />}
+                    </TouchableOpacity>
+                ))}
             </View>
         </View>
     )

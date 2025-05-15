@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from "react-native"
-import { formatDate } from '@utils/formatUtils';
+import { formatDate, formatDateFull } from '@utils/formatUtils';
 
 const OrderInfo = ({ order }) => {
     return (
@@ -7,27 +7,32 @@ const OrderInfo = ({ order }) => {
             <Text style={styles.sectionTitle}>Thông tin đơn hàng</Text>
             <View style={styles.infoRow}>
                 <Text style={styles.infoLabel}>Mã đơn hàng:</Text>
-                <Text style={styles.infoValue}>#{order.id}</Text>
+                <Text style={styles.infoValue}>#{order.orderCode}</Text>
             </View>
             <View style={styles.infoRow}>
                 <Text style={styles.infoLabel}>Ngày đặt:</Text>
-                <Text style={styles.infoValue}>{formatDate(order.date)}</Text>
+                <Text style={styles.infoValue}>{formatDateFull(order.createdAt)}</Text>
+            </View>
+            <View style={styles.infoRow}>
+                <Text style={styles.infoLabel}>Phương thức vận chuyển:</Text>
+                <Text style={styles.infoValue}>{order.shipping.method}</Text>
             </View>
             <View style={styles.infoRow}>
                 <Text style={styles.infoLabel}>Phương thức thanh toán:</Text>
-                <Text style={styles.infoValue}>{order.paymentMethod}</Text>
+                <Text style={styles.infoValue}>{order.payment.method}</Text>
             </View>
             <View style={styles.infoRow}>
                 <Text style={styles.infoLabel}>Trạng thái thanh toán:</Text>
                 <Text
                     style={[
                         styles.infoValue,
-                        { color: order.paymentStatus === "paid" ? "#2ecc71" : "#e74c3c" },
+                        { color: order.payment.status !== "Chưa thanh toán" ? "#2ecc71" : "#e74c3c" },
                     ]}
                 >
-                    {order.paymentStatus === "paid" ? "Đã thanh toán" : "Chưa thanh toán"}
+                    {order.payment.status !== "Chưa thanh toán" ? "Đã thanh toán" : "Chưa thanh toán"}
                 </Text>
             </View>
+
         </View>
     )
 }

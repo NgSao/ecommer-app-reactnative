@@ -1,6 +1,6 @@
-import { Modal, View, Text, TextInput, TouchableOpacity, ScrollView, Image, StyleSheet } from "react-native"
+import { Modal, View, Text, TextInput, TouchableOpacity, ScrollView, Image, StyleSheet, KeyboardAvoidingView, Platform } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
-import { formatDate } from '@utils/formatUtils';
+import { formatDate, formatDateNotification } from '@utils/formatUtils';
 
 const ReplyModal = ({
     replyModalVisible,
@@ -14,6 +14,7 @@ const ReplyModal = ({
     setImageViewerVisible,
     setSelectedViewImage,
 }) => {
+
     return (
         <Modal
             animationType="slide"
@@ -25,7 +26,7 @@ const ReplyModal = ({
                 <View style={styles.modalContent}>
                     <View style={styles.modalHeader}>
                         <Text style={styles.modalTitle}>
-                            {selectedReview?.reply ? "Sửa phản hồi đánh giá" : "Phản hồi đánh giá"}
+                            {selectedReview?.replies[0]?.reply ? "Sửa phản hồi đánh giá" : "Phản hồi đánh giá"}
                         </Text>
                         <TouchableOpacity onPress={() => setReplyModalVisible(false)}>
                             <Ionicons name="close" size={24} color="#333" />
@@ -38,11 +39,21 @@ const ReplyModal = ({
                                 <View style={styles.reviewDetailHeader}>
                                     <View style={styles.reviewUser}>
                                         <View style={styles.userAvatar}>
-                                            <Text style={styles.avatarText}>{selectedReview.userName.charAt(0).toUpperCase()}</Text>
+                                            {selectedReview.avatarUrl ? (
+                                                <Image
+                                                    source={{ uri: selectedReview.avatarUrl }}
+                                                    style={styles.avatarImage}
+                                                />
+                                            ) : (
+                                                <Image
+                                                    source={{ uri: `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedReview.fullName)}&background=random&size=50` }}
+                                                    style={styles.avatarImage}
+                                                />
+                                            )}
                                         </View>
                                         <View>
-                                            <Text style={styles.userName}>{selectedReview.userName}</Text>
-                                            <Text style={styles.reviewDate}>{formatDate(selectedReview.date)}</Text>
+                                            <Text style={styles.userName}>{selectedReview.fullName}</Text>
+                                            <Text style={styles.reviewDate}>{formatDateNotification(selectedReview.createAt)}</Text>
                                         </View>
                                     </View>
                                     <View style={styles.reviewRating}>{renderRatingStars(selectedReview.rating)}</View>
@@ -52,8 +63,9 @@ const ReplyModal = ({
                                     <Image source={{ uri: selectedReview.productImage }} style={styles.productImageDetail} />
                                     <Text style={styles.productNameDetail}>{selectedReview.productName}</Text>
                                 </View>
-
                                 <Text style={styles.reviewCommentDetail}>{selectedReview.comment}</Text>
+
+
 
                                 {selectedReview.images && selectedReview.images.length > 0 && (
                                     <View style={styles.reviewImagesDetail}>
@@ -62,6 +74,7 @@ const ReplyModal = ({
                                                 key={index}
                                                 onPress={() => {
                                                     setSelectedViewImage(image)
+                                                    setReplyModalVisible(false)
                                                     setImageViewerVisible(true)
                                                 }}
                                             >
@@ -72,21 +85,28 @@ const ReplyModal = ({
                                 )}
                             </View>
 
-                            <View style={styles.replyForm}>
-                                <Text style={styles.replyInputLabel}>Phản hồi của bạn:</Text>
-                                <TextInput
-                                    style={styles.replyInput}
-                                    multiline
-                                    numberOfLines={5}
-                                    placeholder="Nhập phản hồi của bạn..."
-                                    value={replyText}
-                                    onChangeText={setReplyText}
-                                />
+                            <KeyboardAvoidingView
+                                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                                keyboardVerticalOffset={Platform.OS === "ios" ? 10 : 0}
+                            >
+                                <View style={styles.replyForm}>
+                                    <Text style={styles.replyInputLabel}>Phản hồi của bạn:</Text>
 
-                                <TouchableOpacity style={styles.submitButton} onPress={submitReply} disabled={submittingReply}>
-                                    <Text style={styles.submitButtonText}>Gửi phản hồi</Text>
-                                </TouchableOpacity>
-                            </View>
+                                    <TextInput
+                                        style={styles.replyInput}
+                                        multiline
+                                        numberOfLines={5}
+                                        placeholder="Nhập phản hồi của bạn..."
+                                        value={replyText}
+                                        onChangeText={setReplyText}
+                                    />
+
+                                    <TouchableOpacity style={styles.submitButton} onPress={submitReply} disabled={submittingReply}>
+                                        <Text style={styles.submitButtonText}>Gửi phản hồi</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </KeyboardAvoidingView>
+
                         </ScrollView>
                     )}
                 </View>
@@ -102,6 +122,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         padding: 20,
+
     },
     modalContent: {
         backgroundColor: "#fff",
@@ -141,6 +162,12 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         marginRight: 10,
+        margin: 5
+    },
+    avatarImage: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
     },
     avatarText: {
         fontWeight: "bold",

@@ -12,6 +12,14 @@ export default function ProfileScreen() {
 
     const menuItems = [
         {
+            id: "0",
+            title: "Quản lý cửa hàng",
+            icon: "storefront-outline",
+            requiresAuth: true,
+            requiresAdmin: true,
+            onPress: () => navigation.navigate("AdminDashboard"),
+        },
+        {
             id: "1",
             title: "Đơn hàng của tôi",
             icon: "receipt-outline",
@@ -67,6 +75,8 @@ export default function ProfileScreen() {
             icon: "settings-outline",
             requiresAuth: false,
             onPress: () => navigation.navigate("Settings"),
+
+
         },
     ]
 
@@ -82,6 +92,9 @@ export default function ProfileScreen() {
     const renderMenuItem = (item) => {
         if (!isLoggedIn && item.requiresAuth) {
             return null
+        }
+        if (item.requiresAdmin && (!user || user.role !== "ADMIN")) {
+            return null;
         }
 
         return (
@@ -104,9 +117,9 @@ export default function ProfileScreen() {
             <ScrollView>
                 {isLoggedIn ? (
                     <View style={styles.profileContainer}>
-                        <Image source={{ uri: user.avatar || "https://placeholder.com/150x150" }} style={styles.profileImage} />
+                        <Image source={{ uri: user.profileImageUrl || "https://media.istockphoto.com/id/1204449006/vi/vec-to/bi%E1%BB%83u-t%C6%B0%E1%BB%A3ng-avatar-line-red-tr%C3%AAn-n%E1%BB%81n-tr%E1%BA%AFng-h%C3%ACnh-minh-h%E1%BB%8Da-vector-ki%E1%BB%83u-ph%E1%BA%B3ng-m%C3%A0u-%C4%91%E1%BB%8F.jpg?s=612x612&w=0&k=20&c=5K2ccYprzYJPLkzD7JmVCxSRpk3yATnO_kzKmb1dOkw=" }} style={styles.profileImage} />
                         <View style={styles.profileInfo}>
-                            <Text style={styles.profileName}>{user.name}</Text>
+                            <Text style={styles.profileName}>{user.fullName}</Text>
                             <Text style={styles.profileEmail}>{user.email}</Text>
                             <Text style={styles.profilePhone}>{user.phone}</Text>
                         </View>

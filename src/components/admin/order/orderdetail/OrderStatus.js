@@ -1,17 +1,17 @@
 import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 
-const OrderStatus = ({ order, updatingStatus, getStatusColor, handleUpdateStatus }) => {
+const OrderStatus = ({ order, updatingStatus, getStatusColor, getStatusText, handleUpdateStatus }) => {
     return (
         <View style={styles.orderStatusContainer}>
             <View style={styles.orderStatusHeader}>
                 <Text style={styles.sectionTitle}>Trạng thái đơn hàng</Text>
-                <View style={[styles.statusBadge, { backgroundColor: getStatusColor(order.statusCode) }]}>
-                    <Text style={styles.statusText}>{order.status}</Text>
+                <View style={[styles.statusBadge, { backgroundColor: getStatusColor(order.orderStatus) }]}>
+                    <Text style={styles.statusText}>{getStatusText(order.orderStatus)}</Text>
                 </View>
             </View>
 
-            {order.statusCode !== "delivered" && order.statusCode !== "cancelled" && (
+            {order.orderStatus !== "DELIVERED" && order.orderStatus !== "CANCELLED" && (
                 <TouchableOpacity
                     style={[styles.updateStatusButton, updatingStatus && styles.disabledButton]}
                     onPress={handleUpdateStatus}

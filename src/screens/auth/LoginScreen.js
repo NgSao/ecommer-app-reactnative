@@ -1,5 +1,4 @@
-
-import { useState } from "react"
+import { useState } from "react";
 import {
     View,
     Text,
@@ -12,84 +11,183 @@ import {
     KeyboardAvoidingView,
     Platform,
     Alert,
-} from "react-native"
-import { Ionicons } from "@expo/vector-icons"
-import { useNavigation } from "@react-navigation/native"
-import { useAuth } from "@contexts/AuthContext"
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { useAuth } from "@contexts/AuthContext";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { POST_ADD } from "api/apiService";
+import * as WebBrowser from "expo-web-browser";
+
+const BASE_URL = "http://172.16.12.131:8080";
+const GOOGLE_AUTH_URL = `${BASE_URL}/api/v1/oauth2/authorization/google`;
+const FACEBOOK_AUTH_URL = `${BASE_URL}/api/v1/oauth2/authorization/facebook`;
 
 export default function LoginScreen() {
-    const navigation = useNavigation()
-    const { login, loading } = useAuth()
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [showPassword, setShowPassword] = useState(false)
-    const [emailError, setEmailError] = useState("")
-    const [passwordError, setPasswordError] = useState("")
+    const navigation = useNavigation();
+    const { login, loading } = useAuth();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [emailError, setEmailError] = useState("");
+    const [passwordError, setPasswordError] = useState("");
 
     // Validate email
     const validateEmail = () => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!email) {
-            setEmailError("Vui lòng nhập email")
-            return false
+            setEmailError("Vui lòng nhập email");
+            return false;
         } else if (!emailRegex.test(email)) {
-            setEmailError("Email không hợp lệ")
-            return false
+            setEmailError("Email không hợp lệ");
+            return false;
         } else {
-            setEmailError("")
-            return true
+            setEmailError("");
+            return true;
         }
-    }
+    };
 
     // Validate password
     const validatePassword = () => {
         if (!password) {
-            setPasswordError("Vui lòng nhập mật khẩu")
-            return false
+            setPasswordError("Vui lòng nhập mật khẩu");
+            return false;
         } else if (password.length < 6) {
-            setPasswordError("Mật khẩu phải có ít nhất 6 ký tự")
-            return false
+            setPasswordError("Mật khẩu phải có ít nhất 6 ký tự");
+            return false;
         } else {
-            setPasswordError("")
-            return true
+            setPasswordError("");
+            return true;
         }
-    }
+    };
 
     // Handle login
     const handleLogin = async () => {
-        const isEmailValid = validateEmail()
-        const isPasswordValid = validatePassword()
+        const isEmailValid = validateEmail();
+        const isPasswordValid = validatePassword();
 
         if (isEmailValid && isPasswordValid) {
-            const success = await login(email, password, navigation)
-            if (!success) {
-                Alert.alert("Đăng nhập thất bại", "Email hoặc mật khẩu không đúng")
-            }
-
-
+            const success = await login(email, password, navigation);
+            // if (!success) {
+            //     Alert.alert("Đăng nhập thất bại", "Email hoặc mật khẩu không đúng");
+            // }
         }
-    }
+    };
 
     // Handle forgot password
-    const handleForgotPassword = () => {
-        Alert.alert("Quên mật khẩu", "Vui lòng nhập email để nhận hướng dẫn đặt lại mật khẩu", [
-            {
-                text: "Hủy",
-                style: "cancel",
-            },
-            {
-                text: "Gửi",
-                onPress: () => console.log("Forgot password for:", email),
-            },
-        ])
-    }
+    const handleForgotPassword = async () => {
+        if (!email) {
+            Alert.alert("Thông báo", "Vui lòng nhập email trước khi tiếp tục.");
+            return;
+        }
+        let flag = false;
+        const formData = { email };
+        Alert.alert(
+            "Quên mật khẩu",
+            "Vui lòng xác nhận để nhận hướng dẫn đặt lại mật khẩu",
+            [
+                {
+                    text: "Hủy",
+                    style: "cancel",
+                },
+                {
+                    text: "Gửi",
+                    onPress: async () => {
+                        try {
+                            const response = await POST_ADD("auth/send-otp", formData);
+                            console.log(formData);
+                            if (response.status === 200) {
+                                Alert.alert("Thành công", "Mã OTP đã được gửi đến email của bạn.");
+                                navigation.navigate("VerifyEmail", { email, flag });
+                            } else {
+                                Alert.alert("Thất bại", "Không thể gửi mã OTP. Vui lòng thử lại.");
+                            }
+                        } catch (error) {
+                            Alert.alert("Thông báo", "Email không hợp lệ hoặc không tồn tại.");
+                        }
+                    },
+                },
+            ]
+        );
+    };
+
+    // Handle Google Login
+    const handleGoogleLogin = async () => {
+        try {
+            const result = await WebBrowser.openAuthSessionAsync(GOOGLE_AUTH_URL,
+                `${BASE_URL}/api/v1/public/oauth2/callback/google`
+
+            );
+            console.log("resut", result);
+            if (result.type === "success" && result.url) {
+                handleAuthRedirect(result.url);
+            } else if (result.type === "cancel" || result.type === "dismiss") {
+                Alert.alert("Thông báo", "Đăng nhập Google bị hủy.");
+            } else {
+                Alert.alert("Lỗi", "Đăng nhập Google thất bại.");
+            }
+        } catch (error) {
+            Alert.alert("Lỗi", "Đăng nhập Google thất bại: " + error.message);
+        }
+    };
+
+    // Handle Facebook Login
+    const handleFacebookLogin = async () => {
+        try {
+            const result = await WebBrowser.openAuthSessionAsync(
+                FACEBOOK_AUTH_URL,
+                `${BASE_URL}/api/v1/public/oauth2/callback/facebook`
+            );
+            if (result.type === "success" && result.url) {
+                handleAuthRedirect(result.url);
+            } else if (result.type === "cancel" || result.type === "dismiss") {
+                Alert.alert("Thông báo", "Đăng nhập Facebook bị hủy.");
+            } else {
+                Alert.alert("Lỗi", "Đăng nhập Facebook thất bại.");
+            }
+        } catch (error) {
+            Alert.alert("Lỗi", "Đăng nhập Facebook thất bại: " + error.message);
+        }
+    };
+
+    // Handle redirect URL
+    const handleAuthRedirect = (url) => {
+        console.log("Redirect URL:", url); // Debugging
+        if (url.includes("/api/v1/public/oauth/success")) {
+            const urlParams = new URLSearchParams(url.split("?")[1]);
+            const token = urlParams.get("token"); // Adjust based on backend response
+            if (token) {
+                // Store token in AuthContext or secure storage
+                // Example: useAuth().setToken(token);
+                Alert.alert("Thành công", "Đăng nhập thành công!");
+                navigation.navigate("Home");
+            } else {
+                Alert.alert("Thành công", "Đăng nhập thành công nhưng không nhận được token.");
+            }
+        } else if (url.includes("/api/v1/public/oauth/linked-already")) {
+            Alert.alert("Thông báo", "Tài khoản đã được liên kết.");
+        } else if (url.includes("/api/v1/public/oauth/linked-success")) {
+            Alert.alert("Thành công", "Liên kết tài khoản thành công!");
+        } else if (url.includes("error")) {
+            Alert.alert("Lỗi", "Đăng nhập thất bại. Vui lòng thử lại.");
+        }
+    };
 
     return (
-        <View style={styles.container}>
-            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.keyboardAvoidingView}>
+        <SafeAreaView style={styles.container}>
+            <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                style={styles.keyboardAvoidingView}
+            >
                 <ScrollView contentContainerStyle={styles.scrollContainer}>
                     <View style={styles.logoContainer}>
-                        <Image source={{ uri: "https://placeholder.com/200x100" }} style={styles.logo} resizeMode="contain" />
+                        <Image
+                            source={{
+                                uri: "https://static.minhtuanmobile.com/assets/front/img/khthanthiet-no-user-tuoi-20.png",
+                            }}
+                            style={styles.logo}
+                            resizeMode="contain"
+                        />
                     </View>
 
                     <Text style={styles.title}>Đăng nhập</Text>
@@ -151,11 +249,11 @@ export default function LoginScreen() {
                         </View>
 
                         <View style={styles.socialLoginContainer}>
-                            <TouchableOpacity style={styles.socialButton}>
+                            <TouchableOpacity style={styles.socialButton} onPress={handleGoogleLogin}>
                                 <Ionicons name="logo-google" size={20} color="#DB4437" />
                                 <Text style={styles.socialButtonText}>Google</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.socialButton}>
+                            <TouchableOpacity style={styles.socialButton} onPress={handleFacebookLogin}>
                                 <Ionicons name="logo-facebook" size={20} color="#4267B2" />
                                 <Text style={styles.socialButtonText}>Facebook</Text>
                             </TouchableOpacity>
@@ -170,10 +268,9 @@ export default function LoginScreen() {
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
-        </View>
-    )
+        </SafeAreaView>
+    );
 }
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,

@@ -9,7 +9,7 @@ const ContinueButton = ({ onPress, disabled, loading }) => (
         {loading ? (
             <ActivityIndicator size="small" color="#fff" />
         ) : (
-            <Text style={styles.changeButtonText}>Tiếp tục</Text>
+            <Text style={styles.changeButtonText}>Cập nhật</Text>
         )}
     </TouchableOpacity>
 )

@@ -1,6 +1,7 @@
+import { formatDateFull } from "@utils/formatUtils"
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native"
 
-const ConversationItem = ({ item, handleOpenChat, formatTime }) => {
+const ConversationItem = ({ item, handleOpenChat }) => {
     return (
         <TouchableOpacity style={styles.conversationItem} onPress={() => handleOpenChat(item)}>
             <View style={styles.avatarContainer}>
@@ -22,7 +23,7 @@ const ConversationItem = ({ item, handleOpenChat, formatTime }) => {
             <View style={styles.conversationInfo}>
                 <View style={styles.conversationHeader}>
                     <Text style={styles.userName}>{item.userName}</Text>
-                    <Text style={styles.messageTime}>{formatTime(item.lastMessageTime)}</Text>
+                    <Text style={styles.messageTime}>{formatDateFull(item.lastMessageTime)}</Text>
                 </View>
 
                 <Text style={[styles.lastMessage, item.unreadCount > 0 && styles.unreadMessage]} numberOfLines={1}>

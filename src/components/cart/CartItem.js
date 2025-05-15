@@ -1,34 +1,50 @@
+
+
 import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
+import { formatPrice } from "@utils/formatUtils"
 
-const CartItem = ({ item, index, formatPrice, incrementQuantity, decrementQuantity, removeItem }) => (
-    <View style={styles.cartItem}>
-        <Image source={{ uri: item.image }} style={styles.productImage} resizeMode="contain" />
-        <View style={styles.productInfo}>
-            <Text style={styles.productName} numberOfLines={2}>
-                {item.name}
-            </Text>
-            <Text style={styles.productVariant}>
-                {item.color}
-                {item.storage ? `, ${item.storage}` : ""}
-                {item.size ? `, ${item.size}` : ""}
-            </Text>
-            <Text style={styles.productPrice}>{formatPrice(item.price)}</Text>
-            <View style={styles.quantityContainer}>
-                <TouchableOpacity style={styles.quantityButton} onPress={() => decrementQuantity(index)}>
-                    <Ionicons name="remove" size={16} color="#333" />
-                </TouchableOpacity>
-                <Text style={styles.quantityText}>{item.quantity}</Text>
-                <TouchableOpacity style={styles.quantityButton} onPress={() => incrementQuantity(index)}>
-                    <Ionicons name="add" size={16} color="#333" />
-                </TouchableOpacity>
+const CartItem = ({ item, index, incrementQuantity, decrementQuantity, removeItem }) => {
+    const hasVariants = item.color || item.storage || item.size
+
+    // Build variant text only if variant fields exist
+    const variantText = hasVariants
+        ? [
+            item.color,
+            item.storage,
+            item.size
+        ]
+            .filter(Boolean) // Remove undefined or empty values
+            .join(", ")
+        : null
+
+    return (
+        <View style={styles.cartItem}>
+            <Image source={{ uri: item.image }} style={styles.productImage} resizeMode="contain" />
+            <View style={styles.productInfo}>
+                <Text style={styles.productName} numberOfLines={2}>
+                    {item.name}
+                </Text>
+                {variantText && (
+                    <Text style={styles.productVariant}>{variantText}</Text>
+                )}
+                <Text style={styles.productPrice}>{formatPrice(item.price)}</Text>
+                <View style={styles.quantityContainer}>
+                    <TouchableOpacity style={styles.quantityButton} onPress={() => decrementQuantity(index)}>
+                        <Ionicons name="remove" size={16} color="#333" />
+                    </TouchableOpacity>
+                    <Text style={styles.quantityText}>{item.quantity}</Text>
+                    <TouchableOpacity style={styles.quantityButton} onPress={() => incrementQuantity(index)}>
+                        <Ionicons name="add" size={16} color="#333" />
+                    </TouchableOpacity>
+                </View>
             </View>
+            <TouchableOpacity style={styles.removeButton} onPress={() => removeItem(index)}>
+                <Ionicons name="trash-outline" size={20} color="#999" />
+            </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.removeButton} onPress={() => removeItem(index)}>
-            <Ionicons name="trash-outline" size={20} color="#999" />
-        </TouchableOpacity>
-    </View>
-)
+    )
+}
 
 const styles = StyleSheet.create({
     cartItem: {

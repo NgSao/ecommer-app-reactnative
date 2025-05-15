@@ -22,15 +22,15 @@ export default function VerifyEmailScreen() {
     const route = useRoute()
     const { verifyEmail, loading } = useAuth()
 
-    const { email, userData } = route.params || {}
+    const { email, flag } = route.params || {}
 
     const [verificationCode, setVerificationCode] = useState(["", "", "", "", "", ""])
-    const [timer, setTimer] = useState(60)
+    const [timer, setTimer] = useState(180)
     const [canResend, setCanResend] = useState(false)
+    const [attemptsLeft, setAttemptsLeft] = useState(3)
 
     const inputRefs = useRef([])
 
-    // Start countdown timer
     useEffect(() => {
         const interval = setInterval(() => {
             setTimer((prevTimer) => {
@@ -49,7 +49,6 @@ export default function VerifyEmailScreen() {
     // Handle input change
     const handleInputChange = (text, index) => {
         if (text.length > 1) {
-            // If pasting multiple digits
             const digits = text.split("").slice(0, 6)
             const newVerificationCode = [...verificationCode]
 
@@ -61,32 +60,27 @@ export default function VerifyEmailScreen() {
 
             setVerificationCode(newVerificationCode)
 
-            // Focus on the next empty input or the last input
             const nextIndex = Math.min(index + digits.length, 5)
             if (inputRefs.current[nextIndex]) {
                 inputRefs.current[nextIndex].focus()
             }
         } else {
-            // Single digit input
             const newVerificationCode = [...verificationCode]
             newVerificationCode[index] = text
             setVerificationCode(newVerificationCode)
 
-            // Auto-focus next input
             if (text !== "" && index < 5) {
                 inputRefs.current[index + 1].focus()
             }
         }
     }
 
-    // Handle key press for backspace
     const handleKeyPress = (e, index) => {
         if (e.nativeEvent.key === "Backspace" && index > 0 && verificationCode[index] === "") {
             inputRefs.current[index - 1].focus()
         }
     }
 
-    // Handle verify button press
     const handleVerify = async () => {
         const code = verificationCode.join("")
 
@@ -94,17 +88,33 @@ export default function VerifyEmailScreen() {
             Alert.alert("Lỗi", "Vui lòng nhập đủ 6 chữ số mã xác thực")
             return
         }
-
-        const success = await verifyEmail(email, code, userData)
+        const success = await verifyEmail(email, code, flag)
 
         if (success) {
-            Alert.alert("Thành công", "Xác thực email thành công. Vui lòng đăng nhập để tiếp tục.", [
-                {
-                    text: "OK",
-                    onPress: () => navigation.navigate("Login"),
-                },
-            ])
+            if (flag) {
+                Alert.alert("Thành công", "Xác thực email thành công. Vui lòng đăng nhập để tiếp tục.", [
+                    { text: "OK", onPress: () => navigation.navigate("Login") },
+                ])
+            } else {
+                Alert.alert("Thành công", "Xác thực thành công! Vui lòng kiểm tra email để nhận mật khẩu mới", [
+                    { text: "OK", onPress: () => navigation.replace("AppTab") },
+                ])
+            }
+        } else {
+            if (attemptsLeft > 1) {
+                setAttemptsLeft(attemptsLeft - 1)
+                Alert.alert("Sai mã", `Mã xác thực không đúng. Bạn còn ${attemptsLeft - 1} lần thử.`)
+            } else {
+                Alert.alert("Thông báo", "Bạn đã nhập sai quá 3 lần. Vui lòng gửi lại mã xác thực.", [
+                    {
+                        text: "OK",
+                        onPress: () => navigation.replace("AppTab"),
+                    },
+                ])
+            }
         }
+
+
     }
 
     // Handle resend code
@@ -132,11 +142,11 @@ export default function VerifyEmailScreen() {
     }
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.keyboardAvoidingView}>
                 <View style={styles.content}>
                     <View style={styles.logoContainer}>
-                        <Image source={{ uri: "https://placeholder.com/200x100" }} style={styles.logo} resizeMode="contain" />
+                        <Image source={{ uri: "https://static.minhtuanmobile.com/assets/front/img/khthanthiet-no-user-tuoi-20.png" }} style={styles.logo} resizeMode="contain" />
                     </View>
 
                     <Text style={styles.title}>Xác thực email</Text>
@@ -187,7 +197,7 @@ export default function VerifyEmailScreen() {
                     </TouchableOpacity>
                 </View>
             </KeyboardAvoidingView>
-        </View>
+        </SafeAreaView>
     )
 }
 

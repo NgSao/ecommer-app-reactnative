@@ -8,7 +8,7 @@ const ProductsHeader = ({ onBack, onImport, onAddProduct, importLoading }) => (
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Quản lý sản phẩm</Text>
         <View style={styles.headerActions}>
-            <TouchableOpacity
+            {/* <TouchableOpacity
                 style={[styles.importButton, importLoading && styles.disabledButton]}
                 onPress={onImport}
                 disabled={importLoading}
@@ -21,7 +21,7 @@ const ProductsHeader = ({ onBack, onImport, onAddProduct, importLoading }) => (
                         <Text style={styles.importButtonText}>Nhập Excel</Text>
                     </>
                 )}
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity style={styles.addButton} onPress={onAddProduct}>
                 <Ionicons name="add" size={24} color="#fff" />
             </TouchableOpacity>

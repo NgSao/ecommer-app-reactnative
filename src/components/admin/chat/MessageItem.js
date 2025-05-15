@@ -1,7 +1,8 @@
+import { formatDateFull } from "@utils/formatUtils"
 import { View, Text, Image, StyleSheet } from "react-native"
 
-const MessageItem = ({ item, conversation, formatTime }) => {
-    const isAdmin = item.senderId === "admin"
+const MessageItem = ({ item, conversation }) => {
+    const isAdmin = item.senderId === "ADMIN"
 
     return (
         <View style={[styles.messageContainer, isAdmin ? styles.adminMessage : styles.userMessage]}>
@@ -28,7 +29,7 @@ const MessageItem = ({ item, conversation, formatTime }) => {
                 )}
 
                 <Text style={[styles.messageTime, isAdmin ? styles.adminMessageTime : styles.userMessageTime]}>
-                    {formatTime(item.timestamp)}
+                    {formatDateFull(item.timestamp)}
                 </Text>
             </View>
         </View>

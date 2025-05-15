@@ -4,11 +4,11 @@ import { Ionicons } from "@expo/vector-icons"
 const SearchFilter = ({ searchQuery, setSearchQuery, statusFilter, setStatusFilter, statusOptions }) => {
     const getStatusColor = (status) => {
         switch (status) {
-            case "active":
+            case "ACTIVE":
                 return "#2ecc71"
-            case "inactive":
+            case "INACTIVE":
                 return "#e74c3c"
-            case "new":
+            case "BLOCKED":
                 return "#3498db"
             default:
                 return "#7f8c8d"

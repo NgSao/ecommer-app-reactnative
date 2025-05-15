@@ -1,14 +1,15 @@
+import { formatDateFull } from "@utils/formatUtils"
 import { View, Text, StyleSheet } from "react-native"
 
-const OrderHeader = ({ order, formatDate, getStatusColor }) => (
+const OrderHeader = ({ order, getStatusColor, getStatusText }) => (
     <View style={styles.section}>
         <View style={styles.orderHeader}>
-            <Text style={styles.orderId}>Đơn hàng #{order.id}</Text>
-            <View style={[styles.statusBadge, { backgroundColor: getStatusColor(order.status) }]}>
-                <Text style={styles.statusText}>{order.status}</Text>
+            <Text style={styles.orderId}>Đơn hàng #{order.orderCode}</Text>
+            <View style={[styles.statusBadge, { backgroundColor: getStatusColor(order.orderStatus) }]}>
+                <Text style={styles.statusText}>{getStatusText(order.orderStatus)}</Text>
             </View>
         </View>
-        <Text style={styles.orderDate}>Ngày đặt: {formatDate(order.date)}</Text>
+        <Text style={styles.orderDate}>Ngày đặt: {formatDateFull(order.createdAt)}</Text>
     </View>
 )
 

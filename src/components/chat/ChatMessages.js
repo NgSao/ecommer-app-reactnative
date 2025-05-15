@@ -1,35 +1,41 @@
 import { View, FlatList, Image, Text, StyleSheet } from "react-native"
 import MessageItem from "./MessageItem"
 
-const ChatMessages = ({ messages, flatListRef, formatTime }) => (
-    <View style={styles.chatContainer}>
-        {messages.length === 0 ? (
-            <View style={styles.emptyContainer}>
-                <Image
-                    source={{ uri: "https://ui-avatars.com/api/?name=Admin&background=e30019&color=fff" }}
-                    style={styles.emptyAvatar}
+const ChatMessages = ({ messages, flatListRef, currentUser }) => {
+    const safeMessages = messages || [];
+
+
+
+    return (
+        <View style={styles.chatContainer}>
+            {safeMessages.length === 0 ? (
+                <View style={styles.emptyContainer}>
+                    <Image
+                        source={{ uri: "https://ui-avatars.com/api/?name=Admin&background=e30019&color=fff" }}
+                        style={styles.emptyAvatar}
+                    />
+                    <Text style={styles.emptyTitle}>Chào mừng đến với Minh Tuấn Mobile</Text>
+                    <Text style={styles.emptyText}>
+                        Hãy gửi tin nhắn cho chúng tôi nếu bạn cần hỗ trợ về sản phẩm, đơn hàng hoặc bất kỳ thắc mắc nào khác.
+                    </Text>
+                </View>
+            ) : (
+                <FlatList
+                    ref={flatListRef}
+                    data={safeMessages}
+                    renderItem={({ item }) => <MessageItem item={item} currentUser={currentUser} />}
+                    keyExtractor={(item, index) => item.id || index.toString()}
+                    contentContainerStyle={styles.messagesList}
+                    onLayout={() => {
+                        if (flatListRef.current && safeMessages.length > 0) {
+                            flatListRef.current.scrollToEnd({ animated: false });
+                        }
+                    }}
                 />
-                <Text style={styles.emptyTitle}>Chào mừng đến với Minh Tuấn Mobile</Text>
-                <Text style={styles.emptyText}>
-                    Hãy gửi tin nhắn cho chúng tôi nếu bạn cần hỗ trợ về sản phẩm, đơn hàng hoặc bất kỳ thắc mắc nào khác.
-                </Text>
-            </View>
-        ) : (
-            <FlatList
-                ref={flatListRef}
-                data={messages}
-                renderItem={({ item }) => <MessageItem item={item} formatTime={formatTime} />}
-                keyExtractor={(item) => item.id}
-                contentContainerStyle={styles.messagesList}
-                onLayout={() => {
-                    if (flatListRef.current && messages.length > 0) {
-                        flatListRef.current.scrollToEnd({ animated: false })
-                    }
-                }}
-            />
-        )}
-    </View>
-)
+            )}
+        </View>
+    );
+}
 
 const styles = StyleSheet.create({
     chatContainer: {

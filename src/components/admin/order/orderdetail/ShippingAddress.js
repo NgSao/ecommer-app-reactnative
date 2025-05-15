@@ -4,7 +4,7 @@ const ShippingAddress = ({ order }) => {
     return (
         <View style={styles.section}>
             <Text style={styles.sectionTitle}>Địa chỉ giao hàng</Text>
-            <Text style={styles.addressText}>{order.shippingAddress}</Text>
+            <Text style={styles.addressText}>{order.shipping.addressDetail}</Text>
         </View>
     )
 }

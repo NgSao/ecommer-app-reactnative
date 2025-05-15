@@ -1,5 +1,6 @@
 import { View, Text, TouchableOpacity, Modal, FlatList, ActivityIndicator, StyleSheet } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
+import { formatPrice } from "@utils/formatUtils"
 
 const PromoCodesModal = ({
     showPromoCodesModal,
@@ -7,7 +8,6 @@ const PromoCodesModal = ({
     availablePromoCodes,
     loadingPromoCodes,
     selectPromoCode,
-    formatPrice,
     formatExpiryDate,
 }) => (
     <Modal

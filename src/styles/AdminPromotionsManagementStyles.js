@@ -1,6 +1,6 @@
-import { StyleSheet } from "react-native"
+import { StyleSheet } from "react-native";
 
-const styles = StyleSheet.create({
+export default StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#f5f5f5",
@@ -8,10 +8,8 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between",
         backgroundColor: "#fff",
-        paddingHorizontal: 15,
-        paddingVertical: 15,
+        padding: 15,
         borderBottomWidth: 1,
         borderBottomColor: "#eee",
     },
@@ -19,17 +17,16 @@ const styles = StyleSheet.create({
         padding: 5,
     },
     headerTitle: {
+        flex: 1,
         fontSize: 18,
         fontWeight: "bold",
         color: "#333",
+        textAlign: "center",
     },
     addButton: {
         backgroundColor: "#e30019",
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        justifyContent: "center",
-        alignItems: "center",
+        borderRadius: 5,
+        padding: 5,
     },
     loadingContainer: {
         flex: 1,
@@ -42,25 +39,43 @@ const styles = StyleSheet.create({
         color: "#666",
     },
     listContainer: {
-        padding: 15,
+        padding: 10,
     },
     sortContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        backgroundColor: "#fff",
-        paddingHorizontal: 15,
-        paddingVertical: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: "#eee",
+        paddingHorizontal: 10,
+        marginBottom: 10,
     },
     sortButton: {
         fontSize: 14,
-        color: "#0066cc",
-        padding: 8,
-        borderWidth: 1,
-        borderColor: "#0066cc",
-        borderRadius: 8
+        color: "#e30019",
+        marginRight: 15,
+        paddingVertical: 5,
     },
-})
-
-export default styles
+    paginationContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: 10,
+        backgroundColor: "#fff",
+        borderTopWidth: 1,
+        borderTopColor: "#eee",
+    },
+    paginationButton: {
+        backgroundColor: "#e30019",
+        paddingVertical: 8,
+        paddingHorizontal: 15,
+        borderRadius: 5,
+    },
+    disabledButton: {
+        backgroundColor: "#ccc",
+    },
+    paginationText: {
+        color: "#fff",
+        fontSize: 14,
+        fontWeight: "bold",
+    },
+    pageInfo: {
+        fontSize: 14,
+        color: "#666",
+    },
+});

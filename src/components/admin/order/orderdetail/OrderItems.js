@@ -1,5 +1,5 @@
 import { View, Text, Image, StyleSheet } from "react-native"
-import { formatCurrency } from '@utils/formatUtils';
+import { formatPrice } from '@utils/formatUtils';
 
 const OrderItems = ({ items }) => {
     return (
@@ -7,15 +7,23 @@ const OrderItems = ({ items }) => {
             <Text style={styles.sectionTitle}>Sản phẩm</Text>
             {items.map((item) => (
                 <View key={item.id} style={styles.productItem}>
-                    <Image source={{ uri: item.image }} style={styles.productImage} />
+                    <Image source={{ uri: item.imageUrl }} style={styles.productImage} />
                     <View style={styles.productInfo}>
                         <Text style={styles.productName}>{item.name}</Text>
-                        <Text style={styles.productVariant}>{item.variant && `Phiên bản: ${item.variant}`}</Text>
+
+                        {item.storage && (
+                            <Text style={styles.productVariant}>Phiên bản: {item.storage}</Text>
+                        )}
+
+                        {item.color && (
+                            <Text style={styles.productVariant}>Màu sắc: {item.color}</Text>
+                        )}
+
                         <View style={styles.productPriceRow}>
-                            <Text style={styles.productPrice}>{formatCurrency(item.price)}</Text>
+                            <Text style={styles.productPrice}>{formatPrice(item.price)}</Text>
                             <Text style={styles.productQuantity}>x{item.quantity}</Text>
                         </View>
-                        <Text style={styles.productTotal}>{formatCurrency(item.price * item.quantity)}</Text>
+                        <Text style={styles.productTotal}>{formatPrice(item.price * item.quantity)}</Text>
                     </View>
                 </View>
             ))}

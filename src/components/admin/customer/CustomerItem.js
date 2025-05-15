@@ -1,43 +1,72 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native"
-import { Ionicons } from "@expo/vector-icons"
-import { formatDate } from '@utils/formatUtils';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { formatDate, formatDateFull } from '@utils/formatUtils';
+import { formatPrice } from '@utils/formatUtils';
 
-const CustomerItem = ({ customer, handleViewCustomerDetails, handleToggleStatus, navigation }) => {
+const CustomerItem = ({ customer, handleViewCustomerDetails, handleToggleStatus, navigation, roleOptions }) => {
     const getStatusColor = (status) => {
         switch (status) {
-            case "active":
-                return "#2ecc71"
-            case "inactive":
-                return "#e74c3c"
-            case "new":
-                return "#3498db"
+            case "ACTIVE":
+                return "#2ecc71";
+            case "INACTIVE":
+                return "#e74c3c";
+            case "BLOCKED":
+                return "#3498db";
             default:
-                return "#7f8c8d"
+                return "#7f8c8d";
         }
-    }
+    };
 
     const getStatusText = (status) => {
         switch (status) {
-            case "active":
-                return "Hoạt động"
-            case "inactive":
-                return "Không hoạt động"
-            case "new":
-                return "Mới"
+            case "ACTIVE":
+                return "Hoạt động";
+            case "INACTIVE":
+                return "Chưa kích hoạt";
+            case "BLOCKED":
+                return "Bị khóa";
             default:
-                return "Không xác định"
+                return "Không xác định";
         }
-    }
+    };
+    const getRoleText = (role) => {
+        const roleOption = roleOptions.find((r) => r.id === role);
+        return roleOption ? roleOption.label : "Không xác định";
+    };
+
+    const getRoleColor = (role) => {
+        switch (role) {
+            case "CUSTOMER":
+                return "#3498db";
+            case "STAFF":
+                return "#f1c40f";
+            case "ADMIN":
+                return "#e74c3c";
+            default:
+                return "#7f8c8d";
+        }
+    };
+
 
     return (
         <View style={styles.customerItem}>
+            <View style={styles.customerStatsRole}>
+                <View style={styles.statItemRole}>
+                    <Text style={[styles.statValueRole, { color: getRoleColor(customer.role) }]}>
+                        {getRoleText(customer.role)}
+                    </Text>
+                </View>
+
+            </View>
+
+
             <View style={styles.customerHeader}>
                 <Image
-                    source={{ uri: customer.avatar || "https://ui-avatars.com/api/?name=" + encodeURIComponent(customer.name) }}
+                    source={{ uri: customer.profileImageUrl || "https://tophinhanh.net/wp-content/uploads/2024/01/avatar-mau-do-7.jpg" }}
                     style={styles.customerAvatar}
                 />
                 <View style={styles.customerInfo}>
-                    <Text style={styles.customerName}>{customer.name}</Text>
+                    <Text style={styles.customerName}>{customer.fullName}</Text>
                     <View style={styles.infoRow}>
                         <Ionicons name="mail-outline" size={14} color="#666" />
                         <Text style={styles.infoText}>{customer.email}</Text>
@@ -54,18 +83,26 @@ const CustomerItem = ({ customer, handleViewCustomerDetails, handleToggleStatus,
 
             <View style={styles.customerStats}>
                 <View style={styles.statItem}>
-                    <Text style={styles.statValue}>{customer.orderCount}</Text>
-                    <Text style={styles.statLabel}>Đơn hàng</Text>
+                    <Text style={styles.statLabel}>Lần đăng nhập cuối</Text>
+                    <Text style={styles.statValue}>{formatDateFull(customer.lastLoginDate)}</Text>
                 </View>
                 <View style={styles.statItem}>
-                    <Text style={styles.statValue}>{customer.totalSpent.toLocaleString("vi-VN")}đ</Text>
-                    <Text style={styles.statLabel}>Chi tiêu</Text>
-                </View>
-                <View style={styles.statItem}>
-                    <Text style={styles.statValue}>{formatDate(customer.createdAt)}</Text>
                     <Text style={styles.statLabel}>Ngày đăng ký</Text>
+                    <Text style={styles.statValue}>{formatDate(customer.createdAt)}</Text>
                 </View>
             </View>
+
+            <View style={styles.customerStats}>
+                <View style={styles.statItem}>
+                    <Text style={styles.statLabel}>Đơn hàng</Text>
+                    <Text style={styles.statValue}>{customer.totalOrders}</Text>
+                </View>
+                <View style={styles.statItem}>
+                    <Text style={styles.statLabel}>Chi tiêu</Text>
+                    <Text style={styles.statValue}>{formatPrice(customer.totalPrice)}</Text>
+                </View>
+            </View>
+
 
             <View style={styles.customerActions}>
                 <TouchableOpacity
@@ -81,15 +118,24 @@ const CustomerItem = ({ customer, handleViewCustomerDetails, handleToggleStatus,
                     <Text style={styles.actionButtonText}>Tạo đơn</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={[styles.actionButton, customer.status === "active" ? styles.deactivateButton : styles.activateButton]}
+                    style={[styles.actionButton, customer.status === "ACTIVE" ? styles.deactivateButton : styles.activateButton]}
                     onPress={() => handleToggleStatus(customer.id, customer.status)}
                 >
-                    <Text style={styles.actionButtonText}>{customer.status === "active" ? "Vô hiệu hóa" : "Kích hoạt"}</Text>
+                    <Text style={styles.actionButtonText}>
+                        {customer.status === "ACTIVE"
+                            ? "Vô hiệu hóa"
+                            : customer.status === "BLOCKED"
+                                ? "Kích hoạt lại"
+                                : "Kích hoạt"}
+                    </Text>
+
                 </TouchableOpacity>
+
+
             </View>
         </View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     customerItem: {
@@ -137,6 +183,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 5,
         borderRadius: 15,
+        position: "absolute",
+        right: 0,
+        top: 0,
     },
     statusText: {
         fontSize: 12,
@@ -150,6 +199,27 @@ const styles = StyleSheet.create({
         borderTopColor: "#eee",
         paddingTop: 10,
         marginBottom: 10,
+    },
+    customerStatsRole: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        borderTopColor: "#eee",
+        paddingTop: 10,
+        marginBottom: 10,
+    },
+    statItemRole: {
+        flex: 1,
+    },
+    statValueRole: {
+        fontSize: 18,
+        fontWeight: "bold",
+        color: "#333",
+    },
+    statLabelRole: {
+        fontSize: 12,
+        color: "#666",
+        marginTop: 5,
     },
     statItem: {
         flex: 1,
@@ -168,12 +238,14 @@ const styles = StyleSheet.create({
     customerActions: {
         flexDirection: "row",
         justifyContent: "flex-end",
+        flexWrap: "wrap",
     },
     actionButton: {
         paddingHorizontal: 15,
         paddingVertical: 8,
         borderRadius: 5,
         marginLeft: 10,
+        marginBottom: 5,
     },
     viewButton: {
         backgroundColor: "#3498db",
@@ -187,11 +259,14 @@ const styles = StyleSheet.create({
     deactivateButton: {
         backgroundColor: "#e74c3c",
     },
+    roleButton: {
+        backgroundColor: "#f1c40f",
+    },
     actionButtonText: {
         fontSize: 12,
         color: "#fff",
         fontWeight: "bold",
     },
-})
+});
 
-export default CustomerItem
+export default CustomerItem;

@@ -1,32 +1,32 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
-import { formatCurrency, formatDate } from '@utils/formatUtils';
+import { formatCurrency, formatDate, formatDateFull } from '@utils/formatUtils';
 
-const OrderItem = ({ order, getStatusColor, handleUpdateStatus, navigateToOrderDetail }) => {
+const OrderItem = ({ order, getStatusColor, handleUpdateStatus, navigateToOrderDetail, getStatusText }) => {
     return (
         <TouchableOpacity
             style={styles.orderItem}
-            onPress={() => navigateToOrderDetail(order.id)}
+            onPress={() => navigateToOrderDetail(order.id, order.userId)}
         >
             <View style={styles.orderHeader}>
-                <Text style={styles.orderId}>#{order.id}</Text>
-                <View style={[styles.statusBadge, { backgroundColor: getStatusColor(order.statusCode) }]}>
-                    <Text style={styles.statusText}>{order.status}</Text>
+                <Text style={styles.orderId}>#{order.orderCode}</Text>
+                <View style={[styles.statusBadge, { backgroundColor: getStatusColor(order.orderStatus) }]}>
+                    <Text style={styles.statusText}>{getStatusText(order.orderStatus)}</Text>
                 </View>
             </View>
 
             <View style={styles.orderInfo}>
                 <View style={styles.infoRow}>
                     <Ionicons name="person-outline" size={16} color="#666" />
-                    <Text style={styles.infoText}>{order.customerName}</Text>
+                    <Text style={styles.infoText}>{order.shipping.fullName || "Chưa cập nhật"}</Text>
                 </View>
                 <View style={styles.infoRow}>
                     <Ionicons name="call-outline" size={16} color="#666" />
-                    <Text style={styles.infoText}>{order.customerPhone}</Text>
+                    <Text style={styles.infoText}>{order.shipping.phone || "Chưa cập nhật"}</Text>
                 </View>
                 <View style={styles.infoRow}>
                     <Ionicons name="calendar-outline" size={16} color="#666" />
-                    <Text style={styles.infoText}>{formatDate(order.date)}</Text>
+                    <Text style={styles.infoText}>{formatDateFull(order.createdAt)}</Text>
                 </View>
             </View>
 
@@ -35,13 +35,13 @@ const OrderItem = ({ order, getStatusColor, handleUpdateStatus, navigateToOrderD
                 <View style={styles.actionButtons}>
                     <TouchableOpacity
                         style={[styles.actionButton, styles.updateButton]}
-                        onPress={() => handleUpdateStatus(order.id, order.statusCode)}
+                        onPress={() => handleUpdateStatus(order.id, order.orderStatus)}
                     >
                         <Text style={styles.actionButtonText}>Cập nhật</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.actionButton, styles.viewButton]}
-                        onPress={() => navigateToOrderDetail(order.id)}
+                        onPress={() => navigateToOrderDetail(order.id, order.userId)}
                     >
                         <Text style={styles.actionButtonText}>Chi tiết</Text>
                     </TouchableOpacity>

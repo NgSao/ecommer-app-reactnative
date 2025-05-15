@@ -1,17 +1,27 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
-import { formatDate } from '@utils/formatUtils';
+import { formatDateNotification } from '@utils/formatUtils';
 const ReviewItem = ({ item, navigation, renderRatingStars, handleViewReviewDetail, handleReplyReview, deleteReview }) => {
     return (
         <View style={styles.reviewItem}>
             <View style={styles.reviewHeader}>
                 <View style={styles.reviewUser}>
                     <View style={styles.userAvatar}>
-                        <Text style={styles.avatarText}>{item.userName.charAt(0).toUpperCase()}</Text>
+                        {item.avatarUrl ? (
+                            <Image
+                                source={{ uri: item.avatarUrl }}
+                                style={styles.avatarImage}
+                            />
+                        ) : (
+                            <Image
+                                source={{ uri: `https://ui-avatars.com/api/?name=${encodeURIComponent(item.fullName)}&background=random&size=50` }}
+                                style={styles.avatarImage}
+                            />
+                        )}
                     </View>
                     <View>
-                        <Text style={styles.userName}>{item.userName}</Text>
-                        <Text style={styles.reviewDate}>{formatDate(item.date)}</Text>
+                        <Text style={styles.userName}>{item.fullName}</Text>
+                        <Text style={styles.reviewDate}>{formatDateNotification(item.createAt)}</Text>
                     </View>
                 </View>
                 <View style={styles.reviewRating}>{renderRatingStars(item.rating)}</View>
@@ -38,11 +48,11 @@ const ReviewItem = ({ item, navigation, renderRatingStars, handleViewReviewDetai
                 </View>
             )}
 
-            {item.reply ? (
+            {item.replies && item.replies.length > 0 ? (
                 <View style={styles.replyContainer}>
                     <Text style={styles.replyLabel}>Phản hồi của bạn:</Text>
                     <Text style={styles.replyText} numberOfLines={2}>
-                        {item.reply}
+                        {item.replies[0]?.reply}
                     </Text>
                 </View>
             ) : null}
@@ -93,6 +103,12 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         marginRight: 10,
+    },
+
+    avatarImage: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
     },
     avatarText: {
         fontWeight: "bold",

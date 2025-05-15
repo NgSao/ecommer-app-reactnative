@@ -20,10 +20,15 @@ const CustomerSelector = ({
             {customer ? (
                 <View style={styles.customerCard}>
                     <View style={styles.customerInfo}>
-                        <Text style={styles.customerName}>{customer.name}</Text>
-                        <Text style={styles.customerPhone}>{customer.phone}</Text>
-                        <Text style={styles.customerEmail}>{customer.email}</Text>
-                        <Text style={styles.customerAddress}>{customer.address}</Text>
+                        <Text style={styles.customerName}>{customer?.fullName}</Text>
+                        <Text style={styles.customerPhone}>{customer?.phone}</Text>
+                        <Text style={styles.customerEmail}>{customer?.email}</Text>
+                        <Text style={styles.customerAddress}>
+                            {customer.address?.[0]
+                                ? `${customer.address?.[0]?.addressDetail || ""}, ${customer.address?.[0]?.street || ""}, ${customer.address?.[0]?.district || ""}, ${customer.address?.[0]?.city || ""}`
+                                : "Chưa có địa chỉ"}
+                        </Text>
+
                     </View>
                     <TouchableOpacity style={styles.changeButton} onPress={() => setShowCustomerModal(true)}>
                         <Text style={styles.changeButtonText}>Thay đổi</Text>
@@ -93,7 +98,7 @@ const CustomerSelector = ({
                                         }}
                                     >
                                         <View style={styles.customerInfo}>
-                                            <Text style={styles.customerName}>{item.name}</Text>
+                                            <Text style={styles.customerName}>{item.fullName}</Text>
                                             <Text style={styles.customerPhone}>{item.phone}</Text>
                                             <Text style={styles.customerEmail}>{item.email}</Text>
                                         </View>
@@ -201,6 +206,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "rgba(0, 0, 0, 0.5)",
         justifyContent: "flex-end",
+
     },
     modalContent: {
         backgroundColor: "#fff",
@@ -208,7 +214,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 15,
         paddingHorizontal: 15,
         paddingBottom: 30,
-        maxHeight: "80%",
+        maxHeight: "90%",
     },
     modalHeader: {
         flexDirection: "row",

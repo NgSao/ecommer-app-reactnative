@@ -1,33 +1,37 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
 
-const ColorSelection = ({ availableColors, selectedColor, handleColorSelect, isVariantInStock, selectedStorage }) => (
-    <View style={styles.selectionContainer}>
-        <Text style={styles.selectionTitle}>Màu sắc</Text>
-        <View style={styles.optionsContainer}>
-            {availableColors.map((color) => (
-                <TouchableOpacity
-                    key={color}
-                    style={[
-                        styles.colorOption,
-                        selectedColor === color && styles.selectedOption,
-                        !isVariantInStock(color, selectedStorage) && styles.outOfStockOption,
-                    ]}
-                    onPress={() => handleColorSelect(color)}
-                >
-                    <Text
+const ColorSelection = ({ availableColors, selectedColor, handleColorSelect, isVariantInStock, selectedStorage }) => {
+    if (selectedColor === null) return null;
+
+    return (
+        <View style={styles.selectionContainer}>
+            <Text style={styles.selectionTitle}>Màu sắc</Text>
+            <View style={styles.optionsContainer}>
+                {availableColors.map((color) => (
+                    <TouchableOpacity
+                        key={color}
                         style={[
-                            selectedColor === color ? styles.selectedOptionText : styles.optionText,
-                            !isVariantInStock(color, selectedStorage) && styles.outOfStockOptionText,
+                            styles.colorOption,
+                            selectedColor === color && styles.selectedOption,
+                            !isVariantInStock(color, selectedStorage) && styles.outOfStockOption,
                         ]}
+                        onPress={() => handleColorSelect(color)}
                     >
-                        {color}
-                    </Text>
-                    {!isVariantInStock(color, selectedStorage) && <Text style={styles.outOfStockLabel}>Hết hàng</Text>}
-                </TouchableOpacity>
-            ))}
+                        <Text
+                            style={[
+                                selectedColor === color ? styles.selectedOptionText : styles.optionText,
+                                !isVariantInStock(color, selectedStorage) && styles.outOfStockOptionText,
+                            ]}
+                        >
+                            {color}
+                        </Text>
+                        {!isVariantInStock(color, selectedStorage) && <Text style={styles.outOfStockLabel}>Hết hàng</Text>}
+                    </TouchableOpacity>
+                ))}
+            </View>
         </View>
-    </View>
-)
+    )
+}
 
 const styles = StyleSheet.create({
     selectionContainer: {

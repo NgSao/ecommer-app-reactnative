@@ -2,46 +2,48 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 import { getNotificationColor, getNotificationIcon } from "@utils/dashboardUtils"
 
-const NotificationsList = ({ notifications, onViewAll, onViewNotification }) => (
-    <View style={styles.notificationsContainer}>
-        <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Thông báo</Text>
-            <TouchableOpacity onPress={onViewAll}>
-                <Text style={styles.viewAllText}>Xem tất cả</Text>
-            </TouchableOpacity>
-        </View>
-        {notifications.length === 0 ? (
-            <View style={styles.emptyContainer}>
-                <Ionicons name="notifications-outline" size={40} color="#ccc" />
-                <Text style={styles.emptyText}>Không có thông báo mới</Text>
-            </View>
-        ) : (
-            notifications.map((notification) => (
-                <TouchableOpacity
-                    key={notification.id}
-                    style={[styles.notificationItem, !notification.read && styles.unreadNotification]}
-                    onPress={() => onViewNotification(notification.screen, notification.params)}
-                >
-                    <View
-                        style={[styles.notificationIcon, { backgroundColor: `${getNotificationColor(notification.type)}20` }]}
-                    >
-                        <Ionicons
-                            name={getNotificationIcon(notification.type)}
-                            size={20}
-                            color={getNotificationColor(notification.type)}
-                        />
-                    </View>
-                    <View style={styles.notificationContent}>
-                        <Text style={styles.notificationTitle}>{notification.title}</Text>
-                        <Text style={styles.notificationMessage}>{notification.message}</Text>
-                        <Text style={styles.notificationTime}>{notification.time}</Text>
-                    </View>
-                    {!notification.read && <View style={styles.unreadDot} />}
+const NotificationsList = ({ notifications, onViewAll, onViewNotification }) => {
+    return (
+        <View style={styles.notificationsContainer}>
+            <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>Thông báo</Text>
+                <TouchableOpacity onPress={onViewAll}>
+                    <Text style={styles.viewAllText}>Xem tất cả</Text>
                 </TouchableOpacity>
-            ))
-        )}
-    </View>
-)
+            </View>
+            {notifications.length === 0 ? (
+                <View style={styles.emptyContainer}>
+                    <Ionicons name="notifications-outline" size={40} color="#ccc" />
+                    <Text style={styles.emptyText}>Không có thông báo mới</Text>
+                </View>
+            ) : (
+                notifications.map((notification) => (
+                    <TouchableOpacity
+                        key={notification.id}
+                        style={[styles.notificationItem, !notification.read && styles.unreadNotification]}
+                        onPress={() => onViewNotification(notification.screen, notification.params)}
+                    >
+                        <View
+                            style={[styles.notificationIcon, { backgroundColor: `${getNotificationColor(notification.type)}20` }]}
+                        >
+                            <Ionicons
+                                name={getNotificationIcon(notification.type)}
+                                size={20}
+                                color={getNotificationColor(notification.type)}
+                            />
+                        </View>
+                        <View style={styles.notificationContent}>
+                            <Text style={styles.notificationTitle}>{notification.title}</Text>
+                            <Text style={styles.notificationMessage}>{notification.message}</Text>
+                            <Text style={styles.notificationTime}>{notification.time}</Text>
+                        </View>
+                        {!notification.read && <View style={styles.unreadDot} />}
+                    </TouchableOpacity>
+                ))
+            )}
+        </View>
+    )
+}
 
 const styles = StyleSheet.create({
     notificationsContainer: {

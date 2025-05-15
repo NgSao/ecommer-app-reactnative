@@ -1,16 +1,27 @@
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native"
-import { Ionicons } from "@expo/vector-icons"
+import { formatDateNotification } from "@utils/formatUtils"
 
-const ReviewItem = ({ item, renderRatingStars, formatDate, setSelectedViewImage, setImageViewerVisible }) => (
+const ReviewItem = ({ item, renderRatingStars, setSelectedViewImage, setImageViewerVisible }) => (
     <View style={styles.reviewItem}>
         <View style={styles.reviewHeader}>
             <View style={styles.reviewUser}>
+
                 <View style={styles.userAvatar}>
-                    <Text style={styles.avatarText}>{item.userName.charAt(0).toUpperCase()}</Text>
+                    {item.avatarUrl ? (
+                        <Image
+                            source={{ uri: item.avatarUrl }}
+                            style={styles.avatarImage}
+                        />
+                    ) : (
+                        <Image
+                            source={{ uri: `https://ui-avatars.com/api/?name=${encodeURIComponent(item.fullName)}&background=random&size=50` }}
+                            style={styles.avatarImage}
+                        />
+                    )}
                 </View>
                 <View>
-                    <Text style={styles.userName}>{item.userName}</Text>
-                    <Text style={styles.reviewDate}>{formatDate(item.date)}</Text>
+                    <Text style={styles.userName}>{item.fullName}</Text>
+                    <Text style={styles.reviewDate}>{formatDateNotification(item.createAt)}</Text>
                 </View>
             </View>
             <View style={styles.reviewRating}>{renderRatingStars(item?.rating || 0)}</View>
@@ -31,12 +42,30 @@ const ReviewItem = ({ item, renderRatingStars, formatDate, setSelectedViewImage,
                 ))}
             </View>
         )}
-        {item.reply && (
+        {item.replies && item.replies.length > 0 && (
             <View style={styles.replyContainer}>
-                <Text style={styles.replyLabel}>Phản hồi từ Minh Tuấn Mobile:</Text>
-                <Text style={styles.replyText}>{item.reply}</Text>
+                <Text style={styles.replyTitle}>Phản hồi</Text>
+                <View style={styles.replyHeader}>
+                    <Image
+                        source={{
+                            uri:
+                                item.replies[0]?.adminAvatarUrl ||
+                                'https://ui-avatars.com/api/?name=Admin&background=F44336&color=fff&size=64',
+                        }}
+                        style={styles.replyAvatar}
+                    />
+                    <View style={styles.replyInfo}>
+                        <Text style={styles.replyAdminName}>Quản Trị Viên</Text>
+                        <Text style={styles.replyDate}>
+                            {formatDateNotification(item.replies[0]?.createdAt)}
+                        </Text>
+                    </View>
+                </View>
+                <Text style={styles.replyText}>{item.replies[0]?.reply}</Text>
             </View>
         )}
+
+
     </View>
 )
 
@@ -59,11 +88,16 @@ const styles = StyleSheet.create({
     userAvatar: {
         width: 36,
         height: 36,
+        overflow: 'hidden',
         borderRadius: 18,
-        backgroundColor: "#e0e0e0",
         justifyContent: "center",
         alignItems: "center",
         marginRight: 10,
+    },
+    avatarImage: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
     },
     avatarText: {
         fontWeight: "bold",
@@ -95,18 +129,53 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     },
     replyContainer: {
-        backgroundColor: "#f9f9f9",
-        padding: 10,
-        borderRadius: 5,
-        marginTop: 10,
+        borderLeftWidth: 3,
+        borderLeftColor: 'red',
+        paddingLeft: 10,
+        backgroundColor: '#fff',
+        padding: 12,
+        marginTop: 15,
+        borderRadius: 6,
+        shadowColor: '#000',
+        shadowOpacity: 0.05,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 4,
+        elevation: 1,
     },
-    replyLabel: {
-        fontWeight: "bold",
-        marginBottom: 5,
+    replyTitle: {
+        color: 'red',
+        fontWeight: 'bold',
+        marginBottom: 8,
+    },
+    replyHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 8,
+    },
+    replyAvatar: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        marginRight: 10,
+    },
+    replyInfo: {
+        flexDirection: 'column',
+    },
+    replyAdminName: {
+        fontWeight: 'bold',
+        fontSize: 14,
+        color: '#d32f2f', // red tone
+    },
+    replyDate: {
+        fontSize: 12,
+        color: '#999',
     },
     replyText: {
-        color: "#333",
+        fontSize: 14,
+        lineHeight: 20,
+        color: '#333',
     },
+
 })
 
 export default ReviewItem

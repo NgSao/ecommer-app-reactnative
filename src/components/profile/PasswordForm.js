@@ -77,7 +77,9 @@ const PasswordForm = ({
         {confirmPasswordError ? <Text style={styles.errorText}>{confirmPasswordError}</Text> : null}
 
         <Text style={styles.noteText}>
-            Sau khi nhập mật khẩu mới, bạn sẽ nhận được mã xác thực qua email để hoàn tất việc đổi mật khẩu.
+            {/* Sau khi nhập mật khẩu mới, bạn sẽ nhận được mã xác thực qua email để hoàn tất việc đổi mật khẩu. */}
+            Sau khi nhập mật khẩu mới, bạn sẽ nhận được thông báo về việc đổi mật khẩu.
+
         </Text>
     </View>
 )

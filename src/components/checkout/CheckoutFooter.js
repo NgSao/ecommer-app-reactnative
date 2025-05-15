@@ -1,6 +1,7 @@
+import { formatPrice } from "@utils/formatUtils"
 import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet } from "react-native"
 
-const CheckoutFooter = ({ calculateTotal, formatPrice, handlePlaceOrder, loading }) => (
+const CheckoutFooter = ({ calculateTotal, handlePlaceOrder, loading }) => (
     <View style={styles.footer}>
         <View style={styles.footerContent}>
             <View>

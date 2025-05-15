@@ -1,6 +1,6 @@
 import { Modal, View, Text, ScrollView, Image, TouchableOpacity, StyleSheet } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
-import { formatDate } from '@utils/formatUtils';
+import { formatDate, formatDateNotification } from '@utils/formatUtils';
 
 const DetailModal = ({
     detailModalVisible,
@@ -34,11 +34,22 @@ const DetailModal = ({
                                 <View style={styles.reviewDetailHeader}>
                                     <View style={styles.reviewUser}>
                                         <View style={styles.userAvatar}>
-                                            <Text style={styles.avatarText}>{selectedDetailReview.userName.charAt(0).toUpperCase()}</Text>
+                                            {selectedDetailReview.avatarUrl ? (
+                                                <Image
+                                                    source={{ uri: selectedDetailReview.avatarUrl }}
+                                                    style={styles.avatarImage}
+                                                />
+                                            ) : (
+                                                <Image
+                                                    source={{ uri: `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedDetailReview.fullName)}&background=random&size=50` }}
+                                                    style={styles.avatarImage}
+                                                />
+                                            )}
                                         </View>
+
                                         <View>
-                                            <Text style={styles.userName}>{selectedDetailReview.userName}</Text>
-                                            <Text style={styles.reviewDate}>{formatDate(selectedDetailReview.date)}</Text>
+                                            <Text style={styles.userName}>{selectedDetailReview.fullName}</Text>
+                                            <Text style={styles.reviewDate}>{formatDateNotification(selectedDetailReview.createAt)}</Text>
                                         </View>
                                     </View>
                                     <View style={styles.reviewRating}>{renderRatingStars(selectedDetailReview.rating)}</View>
@@ -58,6 +69,7 @@ const DetailModal = ({
                                                 key={index}
                                                 onPress={() => {
                                                     setSelectedViewImage(image)
+                                                    setDetailModalVisible(false)
                                                     setImageViewerVisible(true)
                                                 }}
                                             >
@@ -67,12 +79,12 @@ const DetailModal = ({
                                     </View>
                                 )}
 
-                                {selectedDetailReview.reply && (
+                                {selectedDetailReview.replies && selectedDetailReview.replies.length > 0 ? (
                                     <View style={styles.replyContainerDetail}>
                                         <Text style={styles.replyLabelDetail}>Phản hồi của bạn:</Text>
-                                        <Text style={styles.replyTextDetail}>{selectedDetailReview.reply}</Text>
+                                        <Text style={styles.replyTextDetail}>{selectedDetailReview.replies[0]?.reply}</Text>
                                     </View>
-                                )}
+                                ) : null}
                             </View>
 
                             <View style={styles.detailActions}>
@@ -85,7 +97,7 @@ const DetailModal = ({
                                 >
                                     <Ionicons name="chatbubble-outline" size={20} color="#fff" style={styles.actionIcon} />
                                     <Text style={styles.detailActionButtonText}>
-                                        {selectedDetailReview.reply ? "Sửa phản hồi" : "Phản hồi"}
+                                        {selectedDetailReview.replies[0]?.reply ? "Sửa phản hồi" : "Phản hồi"}
                                     </Text>
                                 </TouchableOpacity>
 
@@ -112,6 +124,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         padding: 20,
+        zIndex: 1
     },
     modalContent: {
         backgroundColor: "#fff",
@@ -133,6 +146,7 @@ const styles = StyleSheet.create({
     },
     reviewDetail: {
         marginBottom: 20,
+        padding: 2
     },
     reviewDetailHeader: {
         flexDirection: "row",
@@ -151,6 +165,11 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         marginRight: 10,
+    },
+    avatarImage: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
     },
     avatarText: {
         fontWeight: "bold",

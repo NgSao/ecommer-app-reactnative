@@ -45,11 +45,13 @@ import AdminSettings from '@screens/admin/AdminSettings';
 import AdminReviewsManagement from '@screens/admin/AdminReviewsManagement';
 import AdminChatManagement from '@screens/admin/AdminChatManagement';
 import AdminChatDetail from '@screens/admin/AdminChatDetail';
+import AdminProductDetails from '@screens/admin/AdminProductDetails';
+import AdminBrandManagement from '@screens/admin/AdminBrandManagement';
+import MapViewScreen from '@screens/customer/MapViewScreen';
 
 const AppNavigator = () => {
     const Tab = createBottomTabNavigator();
     const Stack = createNativeStackNavigator();
-    const AdminStack = createNativeStackNavigator()
 
 
     function AppTabs() {
@@ -109,57 +111,58 @@ const AppNavigator = () => {
     }
 
     return (
-        <NavigationContainer>
-            <Stack.Navigator>
-                <Stack.Screen name="AppTab" component={AppTabs} options={{ headerShown: false }} />
-                <Stack.Screen name="ProductDetail" component={ProductDetailScreen} options={{ headerShown: false }} />
-                <Stack.Screen name="ProductList" component={ProductListScreen} options={{ headerShown: false }} />
-                <Stack.Screen name="Search" component={SearchScreen} options={{ headerShown: false }} />
-                <Stack.Screen name="Cart" component={CartScreen} options={{ headerShown: false }} />
-                <Stack.Screen name="Checkout" component={CheckoutScreen} options={{ headerShown: false }} />
-                {/* Profile */}
-                <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
-                <Stack.Screen name="AboutUs" component={AboutUsScreen} options={{ headerShown: false }} />
-                <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }} />
-                <Stack.Screen name="HelpCenter" component={HelpCenterScreen} options={{ headerShown: false }} />
-                <Stack.Screen name="PaymentMethods" component={PaymentMethodsScreen} options={{ headerShown: false }} />
-                <Stack.Screen name="OrderHistory" component={OrderHistoryScreen} options={{ headerShown: false }} />
-                <Stack.Screen name="OrderDetail" component={OrderDetailScreen} options={{ headerShown: false }} />
-                <Stack.Screen name="Wishlist" component={WishlistScreen} options={{ headerShown: false }} />
-                <Stack.Screen name="ShippingAddresses" component={ShippingAddressesScreen} options={{ headerShown: false }} />
-                <Stack.Screen name="EditAddress" component={EditAddressScreen} options={{ headerShown: false }} />
-                <Stack.Screen name="AddAddress" component={AddAddressScreen} options={{ headerShown: false }} />
-                <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false }} />
-                <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} options={{ headerShown: false }} />
+        <Stack.Navigator>
+            <Stack.Screen name="AppTab" component={AppTabs} options={{ headerShown: false }} />
+            <Stack.Screen name="ProductDetail" component={ProductDetailScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="ProductList" component={ProductListScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Search" component={SearchScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Cart" component={CartScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Checkout" component={CheckoutScreen} options={{ headerShown: false }} />
+            {/* Profile */}
+            <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="AboutUs" component={AboutUsScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="HelpCenter" component={HelpCenterScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="PaymentMethods" component={PaymentMethodsScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="OrderHistory" component={OrderHistoryScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="OrderDetail" component={OrderDetailScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Wishlist" component={WishlistScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="ShippingAddresses" component={ShippingAddressesScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="EditAddress" component={EditAddressScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="AddAddress" component={AddAddressScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="MapView" component={MapViewScreen} options={{ headerShown: false }} />
+            {/* Auth */}
+            <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="VerifyEmail" component={VerifyEmailScreen} options={{ headerShown: false }} />
 
-                {/* Auth */}
-                <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-                <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
-                <Stack.Screen name="VerifyEmail" component={VerifyEmailScreen} options={{ headerShown: false }} />
+            {/* Admin Navigation */}
+            <Stack.Screen name="AdminDashboard" component={AdminDashboardScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="AdminProductsManagement" component={AdminProductsScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="AdminEditProduct" component={AdminProductEdit} options={{ headerShown: false }} />
+            <Stack.Screen name="AdminAddProduct" component={AdminProductAdd} options={{ headerShown: false }} />
+            <Stack.Screen name="AdminProductDetails" component={AdminProductDetails} options={{ headerShown: false }} />
 
-                {/* Admin Navigation */}
-                <Stack.Screen name="AdminDashboard" component={AdminDashboardScreen} options={{ headerShown: false }} />
-                <Stack.Screen name="AdminProductsManagement" component={AdminProductsScreen} options={{ headerShown: false }} />
-                <Stack.Screen name="AdminEditProduct" component={AdminProductEdit} options={{ headerShown: false }} />
-                <Stack.Screen name="AdminAddProduct" component={AdminProductAdd} options={{ headerShown: false }} />
+            <Stack.Screen name="AdminOrdersManagement" component={AdminOrdersManagement} options={{ headerShown: false }} />
+            <Stack.Screen name="AdminCreateOrder" component={AdminOderCreate} options={{ headerShown: false }} />
+            <Stack.Screen name="AdminOrderDetail" component={AdminOrderDetail} options={{ headerShown: false }} />
+            <Stack.Screen name="AdminCategoriesManagement" component={AdminCategoriesManagement} options={{ headerShown: false }} />
+            <Stack.Screen name="AdminBrandsManagement" component={AdminBrandManagement} options={{ headerShown: false }} />
 
-                <Stack.Screen name="AdminOrdersManagement" component={AdminOrdersManagement} options={{ headerShown: false }} />
-                <Stack.Screen name="AdminCreateOrder" component={AdminOderCreate} options={{ headerShown: false }} />
-                <Stack.Screen name="AdminOrderDetail" component={AdminOrderDetail} options={{ headerShown: false }} />
-                <Stack.Screen name="AdminCategoriesManagement" component={AdminCategoriesManagement} options={{ headerShown: false }} />
-                <Stack.Screen name="AdminPromotionsManagement" component={AdminPromotionsManagement} options={{ headerShown: false }} />
+            <Stack.Screen name="AdminPromotionsManagement" component={AdminPromotionsManagement} options={{ headerShown: false }} />
 
-                <Stack.Screen name="AdminExportData" component={AdminExportDataScreen} options={{ headerShown: false }} />
-                <Stack.Screen name="AdminCustomersManagement" component={AdminCustomersManagement} options={{ headerShown: false }} />
-                <Stack.Screen name="AdminCreateCustomer" component={AdminCreateCustomer} options={{ headerShown: false }} />
-                <Stack.Screen name="AdminSettings" component={AdminSettings} options={{ headerShown: false }} />
-                <Stack.Screen name="AdminReviewsManagement" component={AdminReviewsManagement} options={{ headerShown: false }} />
+            <Stack.Screen name="AdminExportData" component={AdminExportDataScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="AdminCustomersManagement" component={AdminCustomersManagement} options={{ headerShown: false }} />
+            <Stack.Screen name="AdminCreateCustomer" component={AdminCreateCustomer} options={{ headerShown: false }} />
+            <Stack.Screen name="AdminSettings" component={AdminSettings} options={{ headerShown: false }} />
+            <Stack.Screen name="AdminReviewsManagement" component={AdminReviewsManagement} options={{ headerShown: false }} />
 
-                <Stack.Screen name="AdminChatManagement" component={AdminChatManagement} options={{ headerShown: false }} />
-                <Stack.Screen name="AdminChatDetail" component={AdminChatDetail} options={{ headerShown: false }} />
+            <Stack.Screen name="AdminChatManagement" component={AdminChatManagement} options={{ headerShown: false }} />
+            <Stack.Screen name="AdminChatDetail" component={AdminChatDetail} options={{ headerShown: false }} />
 
-            </Stack.Navigator>
-        </NavigationContainer>
+        </Stack.Navigator>
     );
 }
 

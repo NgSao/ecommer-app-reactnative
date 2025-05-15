@@ -1,17 +1,15 @@
 
+
 import { createContext, useState, useContext, useEffect } from "react"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { showError, showSuccess } from "../service/api"
+import { showError, showSuccess } from "api/apiService"
 
-// Create cart context
 const CartContext = createContext()
 
-// Cart provider component
 export const CartProvider = ({ children }) => {
     const [cartItems, setCartItems] = useState([])
     const [loading, setLoading] = useState(false)
 
-    // Load cart from storage on app start
     useEffect(() => {
         const loadCart = async () => {
             try {
@@ -27,7 +25,6 @@ export const CartProvider = ({ children }) => {
         loadCart()
     }, [])
 
-    // Save cart to storage whenever it changes
     useEffect(() => {
         const saveCart = async () => {
             try {
@@ -41,24 +38,35 @@ export const CartProvider = ({ children }) => {
         saveCart()
     }, [cartItems])
 
-    // Add item to cart
     const addToCart = (product, quantity = 1, options = {}) => {
         try {
             setLoading(true)
+            const { color, storage, size } = options
 
-            // Check if product already exists in cart
-            const existingItemIndex = cartItems.findIndex(
-                (item) =>
-                    item.id === product.id &&
-                    item.color === options.color &&
-                    item.storage === options.storage &&
-                    item.size === options.size,
-            )
+            const hasVariants = color || storage || size
+
+            const existingItemIndex = cartItems.findIndex((item) => {
+                if (hasVariants) {
+                    return (
+                        item.id === product.id &&
+                        item.color === color &&
+                        item.storage === storage &&
+                        item.size === size
+                    )
+                } else {
+                    // For non-variant products, match by id only
+                    return item.id === product.id
+                }
+            })
 
             if (existingItemIndex !== -1) {
-                // Update quantity if product already in cart
+                // Update quantity of existing item
                 const updatedItems = [...cartItems]
                 updatedItems[existingItemIndex].quantity += quantity
+                if (updatedItems[existingItemIndex].quantity > product.maxQuantity) {
+                    updatedItems[existingItemIndex].quantity = product.maxQuantity
+                    showError(`Số lượng tối đa là ${product.maxQuantity}`)
+                }
                 setCartItems(updatedItems)
                 showSuccess("Đã cập nhật số lượng sản phẩm trong giỏ hàng")
             } else {
@@ -69,7 +77,8 @@ export const CartProvider = ({ children }) => {
                     price: product.price,
                     image: product.image,
                     quantity,
-                    ...options,
+                    maxQuantity: product.maxQuantity,
+                    ...(hasVariants ? { color, storage, size } : {}),
                 }
                 setCartItems((prev) => [...prev, newItem])
                 showSuccess("Đã thêm sản phẩm vào giỏ hàng")
@@ -93,7 +102,12 @@ export const CartProvider = ({ children }) => {
             }
 
             const updatedItems = [...cartItems]
-            updatedItems[itemIndex].quantity = quantity
+            if (quantity > updatedItems[itemIndex].maxQuantity) {
+                updatedItems[itemIndex].quantity = updatedItems[itemIndex].maxQuantity
+                showError(`Số lượng tối đa là ${updatedItems[itemIndex].maxQuantity}`)
+            } else {
+                updatedItems[itemIndex].quantity = quantity
+            }
             setCartItems(updatedItems)
             return true
         } catch (error) {
@@ -166,4 +180,3 @@ export const useCart = () => {
     }
     return context
 }
-

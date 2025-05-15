@@ -1,10 +1,27 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
-import { formatCurrency } from '@utils/formatUtils';
+import { formatCurrency, formatDateFull, formatPrice } from '@utils/formatUtils';
 import { getStatusColor } from "@utils/dashboardUtils";
 
-const RecentOrders = ({ orders, onViewAll, onViewOrderDetail }) => (
-    <View style={styles.recentOrdersContainer}>
+const RecentOrders = ({ orders, onViewAll, onViewOrderDetail }) => {
+    const getStatusText = (status) => {
+        switch (status) {
+            case "PENDING":
+                return "Đang xử lý";
+            case "CONFIRMED":
+                return "Đã xác nhận";
+            case "SHIPPED":
+                return "Đã giao hàng";
+            case "DELIVERED":
+                return "Đã giao thành công";
+            case "CANCELLED":
+                return "Đã hủy";
+            default:
+                return "Không xác định";
+        }
+    };
+
+    return (<View style={styles.recentOrdersContainer}>
         <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Đơn hàng gần đây</Text>
             <TouchableOpacity onPress={onViewAll}>
@@ -21,26 +38,26 @@ const RecentOrders = ({ orders, onViewAll, onViewOrderDetail }) => (
                 <TouchableOpacity
                     key={order.id}
                     style={styles.orderItem}
-                    onPress={() => onViewOrderDetail(order.id)}
+                    onPress={() => onViewOrderDetail(order.id, order.userId)}
                 >
                     <View style={styles.orderHeader}>
-                        <Text style={styles.orderId}>#{order.id}</Text>
-                        <View style={[styles.statusBadge, { backgroundColor: getStatusColor(order.status) }]}>
-                            <Text style={styles.statusText}>{order.status}</Text>
+                        <Text style={styles.orderId}>#{order.orderCode}</Text>
+                        <View style={[styles.statusBadge, { backgroundColor: getStatusColor(order.orderStatus) }]}>
+                            <Text style={styles.statusText}>{getStatusText(order.orderStatus)}</Text>
                         </View>
                     </View>
                     <View style={styles.orderInfo}>
                         <View style={styles.orderCustomer}>
                             <Ionicons name="person-outline" size={16} color="#666" />
-                            <Text style={styles.orderCustomerName}>{order.customerName}</Text>
+                            <Text style={styles.orderCustomerName}>{order.shipping.fullName}</Text>
                         </View>
-                        <Text style={styles.orderDate}>{order.date}</Text>
+                        <Text style={styles.orderDate}>{formatDateFull(order.createdAt)}</Text>
                     </View>
                     <View style={styles.orderFooter}>
-                        <Text style={styles.orderTotal}>{formatCurrency(order.total)}</Text>
+                        <Text style={styles.orderTotal}>{formatPrice(order.total)}</Text>
                         <TouchableOpacity
                             style={styles.viewButton}
-                            onPress={() => onViewOrderDetail(order.id)}
+                            onPress={() => onViewOrderDetail(order.id, order.userId)}
                         >
                             <Text style={styles.viewButtonText}>Chi tiết</Text>
                         </TouchableOpacity>
@@ -49,7 +66,8 @@ const RecentOrders = ({ orders, onViewAll, onViewOrderDetail }) => (
             ))
         )}
     </View>
-)
+    )
+}
 
 const styles = StyleSheet.create({
     recentOrdersContainer: {

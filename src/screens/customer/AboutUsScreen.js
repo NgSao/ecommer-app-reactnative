@@ -6,7 +6,6 @@ import { useNavigation } from "@react-navigation/native"
 export default function AboutUsScreen() {
     const navigation = useNavigation()
 
-    // Open social media links
     const openLink = (url) => {
         Linking.openURL(url).catch((err) => console.error("Couldn't open link", err))
     }

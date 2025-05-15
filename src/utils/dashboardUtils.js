@@ -1,17 +1,18 @@
-export const getStatusColor = (status) => {
-    switch (status) {
-        case "Chờ xử lý":
+export const getStatusColor = (orderStatus) => {
+    switch (orderStatus) {
+        case "PENDING":
             return "#f39c12"
-        case "Đang xử lý":
+        case "CONFIRMED":
             return "#3498db"
-        case "Đang giao":
+        case "SHIPPED":
             return "#9b59b6"
-        case "Đã giao":
+        case "DELIVERED":
             return "#2ecc71"
-        case "Đã hủy":
+        case "CANCELLED":
             return "#e74c3c"
         default:
             return "#7f8c8d"
+
     }
 }
 
@@ -43,4 +44,40 @@ export const getNotificationColor = (type) => {
         default:
             return "#7f8c8d"
     }
+
 }
+
+
+export const getStatusText = (status) => {
+    switch (status) {
+        case "PENDING":
+            return "Đang xử lý";
+        case "CONFIRMED":
+            return "Đã xác nhận";
+        case "SHIPPED":
+            return "Đã giao hàng";
+        case "DELIVERED":
+            return "Đã giao thành công";
+        case "CANCELLED":
+            return "Đã hủy";
+        default:
+            return "Không xác định";
+    }
+};
+
+// export const getStatusColor = (status) => {
+//     switch (status) {
+//         case "PENDING":
+//             return "#FFC107"; // Màu vàng - Đang xử lý
+//         case "CONFIRMED":
+//             return "#03A9F4"; // Màu xanh dương nhạt - Đã xác nhận
+//         case "SHIPPED":
+//             return "#3F51B5"; // Màu xanh dương đậm - Đã giao hàng
+//         case "DELIVERED":
+//             return "#4CAF50"; // Màu xanh lá - Giao thành công
+//         case "CANCELLED":
+//             return "#F44336"; // Màu đỏ - Đã hủy
+//         default:
+//             return "#9E9E9E"; // Màu xám - Không xác định
+//     }
+// };

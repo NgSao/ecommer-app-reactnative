@@ -1,20 +1,22 @@
 import { View, Text, StyleSheet } from "react-native"
 
-const CustomerInfo = ({ order }) => {
+const CustomerInfo = ({ user, order }) => {
     return (
         <View style={styles.section}>
             <Text style={styles.sectionTitle}>Thông tin khách hàng</Text>
             <View style={styles.infoRow}>
                 <Text style={styles.infoLabel}>Tên khách hàng:</Text>
-                <Text style={styles.infoValue}>{order.customerName}</Text>
+                <Text style={styles.infoValue}>{order.shipping.fullName}</Text>
             </View>
             <View style={styles.infoRow}>
                 <Text style={styles.infoLabel}>Số điện thoại:</Text>
-                <Text style={styles.infoValue}>{order.customerPhone}</Text>
+                <Text style={styles.infoValue}>{order.shipping.phone || "Chưa cập nhật"}</Text>
             </View>
             <View style={styles.infoRow}>
                 <Text style={styles.infoLabel}>Email:</Text>
-                <Text style={styles.infoValue}>{order.customerEmail}</Text>
+                <Text style={styles.infoValue}>
+                    {user ? user.email : "Chưa cập nhật"}
+                </Text>
             </View>
         </View>
     )

@@ -1,6 +1,7 @@
+import { formatPrice } from "@utils/formatUtils"
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
 
-const CheckoutSection = ({ cartItems, calculateSubtotal, calculateDiscount, calculateTotal, appliedPromo, formatPrice, navigation }) => (
+const CheckoutSection = ({ cartItems, calculateSubtotal, calculateDiscount, calculateTotal, appliedPromo, navigation }) => (
     <View style={styles.checkoutContainer}>
         <View style={styles.totalContainer}>
             <Text style={styles.checkoutTotalLabel}>Tổng cộng:</Text>

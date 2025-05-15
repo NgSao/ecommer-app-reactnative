@@ -20,7 +20,7 @@ export default function RegisterScreen() {
     const navigation = useNavigation()
     const { register, loading } = useAuth()
 
-    const [name, setName] = useState("")
+    const [fullName, setName] = useState("")
     const [email, setEmail] = useState("")
     const [phone, setPhone] = useState("")
     const [password, setPassword] = useState("")
@@ -40,7 +40,7 @@ export default function RegisterScreen() {
 
     // Validate name
     const validateName = () => {
-        if (!name) {
+        if (!fullName) {
             setNameError("Vui lòng nhập họ tên")
             return false
         } else {
@@ -87,7 +87,12 @@ export default function RegisterScreen() {
         } else if (password.length < 6) {
             setPasswordError("Mật khẩu phải có ít nhất 6 ký tự")
             return false
-        } else {
+        }
+        else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/.test(password)) {
+            setPasswordError("Mật khẩu phải có ít nhất một chữ cái viết hoa, một chữ cái viết thường, một chữ số và một ký tự đặc biệt");
+            return false;
+        }
+        else {
             setPasswordError("")
             return true
         }
@@ -117,26 +122,26 @@ export default function RegisterScreen() {
 
         if (isNameValid && isEmailValid && isPhoneValid && isPasswordValid && isConfirmPasswordValid) {
             const userData = {
-                name,
+                fullName,
                 email,
                 phone,
                 password,
             }
 
             const success = await register(userData)
+            let flag = true;
             if (success) {
-                // Navigate to verification screen
-                navigation.navigate("VerifyEmail", { email, userData })
+                navigation.navigate("VerifyEmail", { email, flag })
             }
         }
     }
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.keyboardAvoidingView}>
                 <ScrollView contentContainerStyle={styles.scrollContainer}>
                     <View style={styles.logoContainer}>
-                        <Image source={{ uri: "https://placeholder.com/200x100" }} style={styles.logo} resizeMode="contain" />
+                        <Image source={{ uri: "https://static.minhtuanmobile.com/assets/front/img/khthanthiet-no-user-tuoi-20.png" }} style={styles.logo} resizeMode="contain" />
                     </View>
 
                     <Text style={styles.title}>Đăng ký tài khoản</Text>
@@ -149,7 +154,7 @@ export default function RegisterScreen() {
                                 style={styles.input}
                                 placeholder="Họ tên"
                                 placeholderTextColor="#999"
-                                value={name}
+                                value={fullName}
                                 onChangeText={setName}
                                 onBlur={validateName}
                             />
@@ -225,10 +230,10 @@ export default function RegisterScreen() {
                         <TouchableOpacity
                             style={[
                                 styles.registerButton,
-                                (loading || !name || !email || !phone || !password || !confirmPassword) && styles.disabledButton,
+                                (loading || !fullName || !email || !phone || !password || !confirmPassword) && styles.disabledButton,
                             ]}
                             onPress={handleRegister}
-                            disabled={loading || !name || !email || !phone || !password || !confirmPassword}
+                            disabled={loading || !fullName || !email || !phone || !password || !confirmPassword}
                         >
                             {loading ? (
                                 <ActivityIndicator size="small" color="#fff" />
@@ -246,7 +251,7 @@ export default function RegisterScreen() {
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
-        </View>
+        </SafeAreaView>
     )
 }
 

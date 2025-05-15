@@ -1,6 +1,6 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
-import { formatCurrency } from '@utils/formatUtils';
+import { formatPrice } from '@utils/formatUtils';
 
 const CartItem = ({ item, updateQuantity, removeFromCart }) => {
     return (
@@ -9,7 +9,8 @@ const CartItem = ({ item, updateQuantity, removeFromCart }) => {
             <View style={styles.cartItemInfo}>
                 <Text style={styles.cartItemName}>{item.name}</Text>
                 {item.variant && <Text style={styles.cartItemVariant}>{item.variant}</Text>}
-                <Text style={styles.cartItemPrice}>{formatCurrency(item.price)}</Text>
+
+                <Text style={styles.cartItemPrice}>{formatPrice(item.price)}</Text>
 
                 <View style={styles.cartItemActions}>
                     <View style={styles.quantityControls}>
@@ -28,12 +29,14 @@ const CartItem = ({ item, updateQuantity, removeFromCart }) => {
                         </TouchableOpacity>
                     </View>
 
-                    <TouchableOpacity style={styles.removeButton} onPress={() => removeFromCart(item.id)}>
-                        <Ionicons name="trash-outline" size={16} color="#e30019" />
-                    </TouchableOpacity>
                 </View>
+
             </View>
-            <Text style={styles.cartItemTotal}>{formatCurrency(item.price * item.quantity)}</Text>
+
+            <TouchableOpacity style={styles.removeButton} onPress={() => removeFromCart(item.id)}>
+                <Ionicons name="trash-outline" size={18} color="#e30019" />
+            </TouchableOpacity>
+            <Text style={styles.cartItemTotal}>{formatPrice(item.price * item.quantity)}</Text>
         </View>
     )
 }
@@ -93,14 +96,20 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     removeButton: {
-        padding: 5,
+        padding: 10,
+        position: "absolute",
+        top: 0,
+        right: 0,
     },
     cartItemTotal: {
         fontSize: 14,
         fontWeight: "bold",
         color: "#333",
-        width: 80,
         textAlign: "right",
+        position: "absolute",
+        bottom: 5,
+        right: 0,
+        padding: 10,
     },
 })
 

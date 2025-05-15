@@ -1,39 +1,63 @@
-import { TouchableOpacity, Image, Text, View, StyleSheet } from "react-native"
-import { Ionicons } from "@expo/vector-icons"
+import { TouchableOpacity, Image, Text, View, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
-const ListItem = ({ item, navigateToProductDetail, formatPrice, addToCart, addToWishlist, isInWishlist }) => (
-    <TouchableOpacity style={styles.listItem} onPress={() => navigateToProductDetail(item)}>
-        <Image source={{ uri: item.image }} style={styles.listItemImage} resizeMode="contain" />
-        <View style={styles.listItemContent}>
-            <Text style={styles.listItemName} numberOfLines={2}>
-                {item.name}
-            </Text>
-            <View style={styles.priceContainer}>
-                <Text style={styles.productPrice}>{formatPrice(item.price)}đ</Text>
-                {item.originalPrice > item.price && (
-                    <Text style={styles.originalPrice}>{formatPrice(item.originalPrice)}đ</Text>
-                )}
-            </View>
-            {item.discount > 0 && (
-                <View style={[styles.listDiscountBadge]}>
-                    <Text style={styles.discountText}>-{item.discount}%</Text>
+const ListItem = ({ item, navigateToProductDetail, formatPrice, addToCart, addToWishlist, isInWishlist }) => {
+    const handleAddToCart = () => {
+        const productToAdd = {
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            image: item.image,
+            maxQuantity: item.stock
+        };
+
+        const options = item.color || item.storage
+            ? {
+                color: item.color,
+                storage: item.storage
+            }
+            : {};
+
+        addToCart(productToAdd, 1, options);
+    };
+    return (
+        <TouchableOpacity style={styles.listItem} onPress={() => navigateToProductDetail(item)}>
+            <Image
+                source={{ uri: item.image || "https://via.placeholder.com/100" }}
+                style={styles.listItemImage}
+                resizeMode="contain"
+            />
+            <View style={styles.listItemContent}>
+                <Text style={styles.listItemName} numberOfLines={2}>
+                    {item.name}
+                </Text>
+                <View style={styles.priceContainer}>
+                    <Text style={styles.productPrice}>{formatPrice(item.price)}</Text>
+                    {item.originalPrice > item.price && (
+                        <Text style={styles.originalPrice}>{formatPrice(item.originalPrice)}</Text>
+                    )}
                 </View>
-            )}
-            <View style={styles.listItemActions}>
-                <TouchableOpacity style={styles.listAddToCartButton} onPress={() => addToCart(item, 1)}>
-                    <Text style={styles.addToCartText}>Thêm vào giỏ</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.listWishlistButton} onPress={() => addToWishlist(item)}>
-                    <Ionicons
-                        name={isInWishlist(item.id) ? "heart" : "heart-outline"}
-                        size={20}
-                        color={isInWishlist(item.id) ? "#e30019" : "#666"}
-                    />
-                </TouchableOpacity>
+                {item.discount > 0 && (
+                    <View style={styles.listDiscountBadge}>
+                        <Text style={styles.discountText}>-{item.discount}%</Text>
+                    </View>
+                )}
+                <View style={styles.listItemActions}>
+                    <TouchableOpacity style={styles.listAddToCartButton} onPress={handleAddToCart}>
+                        <Text style={styles.addToCartText}>Thêm vào giỏ</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.listWishlistButton} onPress={() => addToWishlist(item)}>
+                        <Ionicons
+                            name={isInWishlist(item.id) ? "heart" : "heart-outline"}
+                            size={20}
+                            color={isInWishlist(item.id) ? "#e30019" : "#666"}
+                        />
+                    </TouchableOpacity>
+                </View>
             </View>
-        </View>
-    </TouchableOpacity>
-)
+        </TouchableOpacity>
+    )
+}
 
 const styles = StyleSheet.create({
     listItem: {
@@ -108,6 +132,6 @@ const styles = StyleSheet.create({
     listWishlistButton: {
         padding: 5,
     },
-})
+});
 
-export default ListItem
+export default ListItem;

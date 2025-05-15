@@ -11,7 +11,7 @@ const PaymentInfoSection = ({ payment }) => (
                     : payment.method === "banking"
                         ? "Chuyển khoản ngân hàng"
                         : payment.method === "vnpay"
-                            ? "Thanh toán qua VNPAY"
+                            ? "vnpay"
                             : payment.method}
             </Text>
         </View>

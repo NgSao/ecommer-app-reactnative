@@ -1,6 +1,7 @@
+import { formatPrice } from "@utils/formatUtils"
 import { View, Text, StyleSheet } from "react-native"
 
-const OrderSummarySection = ({ order, formatPrice }) => (
+const OrderSummarySection = ({ order }) => (
     <View style={styles.section}>
         <Text style={styles.sectionTitle}>Tóm tắt đơn hàng</Text>
         <View style={styles.summaryRow}>

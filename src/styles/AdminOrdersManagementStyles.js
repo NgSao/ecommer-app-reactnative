@@ -23,6 +23,14 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#333",
     },
+    addButton: {
+        backgroundColor: "#e30019",
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        justifyContent: "center",
+        alignItems: "center",
+    },
     exportButton: {
         backgroundColor: "#0066cc",
         width: 40,

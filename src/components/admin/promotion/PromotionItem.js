@@ -50,10 +50,10 @@ const PromotionItem = ({ item, onToggleStatus, onEdit, onDelete, onViewDetails, 
                     <Text style={styles.actionButtonText}>Xem chi tiết</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={[styles.actionButton, styles.toggleButton, !item.isActive && styles.activateButton]}
+                    style={[styles.actionButton, styles.toggleButton, !item.active && styles.activateButton]}
                     onPress={() => onToggleStatus(item)}
                 >
-                    <Text style={styles.actionButtonText}>{item.isActive ? "Vô hiệu" : "Kích hoạt"}</Text>
+                    <Text style={styles.actionButtonText}>{item.active ? "Vô hiệu" : "Kích hoạt"}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.actionButton, styles.editButton]} onPress={() => onEdit(item)}>
                     <Text style={styles.actionButtonText}>Sửa</Text>

@@ -1,23 +1,34 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
+import { formatDateFull, formatPrice } from "@utils/formatUtils"
 
-const OrderItem = ({ item, navigateToOrderDetail, formatDate, formatPrice, getStatusColor }) => (
+const OrderItem = ({ item, navigateToOrderDetail, getStatusColor, getStatusText }) => (
     <TouchableOpacity style={styles.orderItem} onPress={() => navigateToOrderDetail(item.id)}>
         <View style={styles.orderHeader}>
-            <Text style={styles.orderId}>Đơn hàng #{item.id}</Text>
-            <View style={[styles.statusBadge, { backgroundColor: getStatusColor(item.status) }]}>
-                <Text style={styles.statusText}>{item.status}</Text>
+            <Text style={styles.orderId}>Đơn hàng#{item.orderCode}</Text>
+            <View style={[styles.statusBadge, { backgroundColor: getStatusColor(item.orderStatus) }]}>
+                <Text style={styles.statusText}>{getStatusText(item.orderStatus)} </Text>
             </View>
         </View>
         <View style={styles.orderInfo}>
-            <Text style={styles.orderDate}>Ngày đặt: {formatDate(item.date)}</Text>
+            <Text style={styles.orderDate}>Ngày đặt: {formatDateFull(item.createdAt)}</Text>
+
+        </View>
+        <View style={styles.orderInfo}>
             <Text style={styles.orderTotal}>Tổng tiền: {formatPrice(item.total)}</Text>
-            {item.promoCode && (
+
+        </View>
+        {item.promoCode && (
+            <View style={styles.orderInfo}>
+
                 <Text style={styles.orderDiscount}>
                     Mã giảm giá: {item.promoCode} (-{formatPrice(item.discount)})
                 </Text>
-            )}
-        </View>
+            </View>
+
+        )}
+
+
         <View style={styles.orderItems}>
             <Text style={styles.orderItemsTitle}>Sản phẩm:</Text>
             {item.items.map((product, index) => (

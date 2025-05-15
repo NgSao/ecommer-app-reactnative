@@ -17,12 +17,10 @@ export default function SettingsScreen() {
     const [biometricLogin, setBiometricLogin] = useState(false)
     const [language, setLanguage] = useState("Tiếng Việt")
 
-    // Load settings on component mount
     useEffect(() => {
         loadSettings()
     }, [])
 
-    // Load settings from AsyncStorage
     const loadSettings = async () => {
         try {
             const settings = await AsyncStorage.getItem("userSettings")

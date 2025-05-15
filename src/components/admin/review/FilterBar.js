@@ -1,72 +1,67 @@
-import { ScrollView, TouchableOpacity, Text, StyleSheet } from "react-native"
+import { ScrollView, TouchableOpacity, Text, StyleSheet, View } from "react-native";
 
 const FilterBar = ({ ratingFilter, setRatingFilter, statusFilter, setStatusFilter }) => {
     return (
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterContainer}>
+        <View style={styles.filterContainer}>
             {/* Lọc theo đánh giá sao */}
-            <TouchableOpacity
-                style={[styles.filterButton, ratingFilter === 0 && styles.activeFilterButton]}
-                onPress={() => setRatingFilter(0)}
-            >
-                <Text style={[styles.filterButtonText, ratingFilter === 0 && styles.activeFilterButtonText]}>Tất cả sao</Text>
-            </TouchableOpacity>
-
-            {[5, 4, 3, 2, 1].map((rating) => (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.scrollContainer}>
                 <TouchableOpacity
-                    key={`rating-${rating}`}
-                    style={[styles.filterButton, ratingFilter === rating && styles.activeFilterButton]}
-                    onPress={() => setRatingFilter(rating)}
-                >
-                    <Text style={[styles.filterButtonText, ratingFilter === rating && styles.activeFilterButtonText]}>
-                        {rating} sao
+                    style={[styles.filterButton, ratingFilter === 0 && styles.activeFilterButton]}
+                    onPress={() => setRatingFilter(0)}                >
+                    <Text style={[styles.filterButtonText, ratingFilter === 0 && styles.activeFilterButtonText]}>
+                        Tất cả sao
                     </Text>
                 </TouchableOpacity>
-            ))}
+
+                {[5, 4, 3, 2, 1].map((rating) => (
+                    <TouchableOpacity
+                        key={`rating-${rating}`}
+                        style={[styles.filterButton, ratingFilter === rating && styles.activeFilterButton]}
+                        onPress={() => setRatingFilter(rating)}
+                    >
+                        <Text style={[styles.filterButtonText, ratingFilter === rating && styles.activeFilterButtonText]}>
+                            {rating} sao
+                        </Text>
+                    </TouchableOpacity>
+                ))}
+            </ScrollView>
 
             {/* Lọc theo trạng thái phản hồi */}
-            <TouchableOpacity
-                style={[styles.filterButton, statusFilter === "all" && styles.activeFilterButton]}
-                onPress={() => setStatusFilter("all")}
-            >
-                <Text style={[styles.filterButtonText, statusFilter === "all" && styles.activeFilterButtonText]}>
-                    Tất cả trạng thái
-                </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-                style={[styles.filterButton, statusFilter === "replied" && styles.activeFilterButton]}
-                onPress={() => setStatusFilter("replied")}
-            >
-                <Text style={[styles.filterButtonText, statusFilter === "replied" && styles.activeFilterButtonText]}>
-                    Đã phản hồi
-                </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-                style={[styles.filterButton, statusFilter === "not_replied" && styles.activeFilterButton]}
-                onPress={() => setStatusFilter("not_replied")}
-            >
-                <Text style={[styles.filterButtonText, statusFilter === "not_replied" && styles.activeFilterButtonText]}>
-                    Chưa phản hồi
-                </Text>
-            </TouchableOpacity>
-        </ScrollView>
-    )
-}
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.scrollContainer}>
+                {["all", "replied", "not_replied"].map((status) => (
+                    <TouchableOpacity
+                        key={`status-${status}`}
+                        style={[styles.filterButton, statusFilter === status && styles.activeFilterButton]}
+                        onPress={() => setStatusFilter(status)}
+                    >
+                        <Text style={[styles.filterButtonText, statusFilter === status && styles.activeFilterButtonText]}>
+                            {status === "all" ? "Tất cả trạng thái" : status === "replied" ? "Đã phản hồi" : "Chưa phản hồi"}
+                        </Text>
+                    </TouchableOpacity>
+                ))}
+            </ScrollView>
+        </View>
+    );
+};
 
 const styles = StyleSheet.create({
     filterContainer: {
         paddingHorizontal: 16,
         marginBottom: 8,
+        marginTop: 10
+    },
+    scrollContainer: {
+        marginBottom: 8,
     },
     filterButton: {
         paddingVertical: 6,
-        paddingBottom: 20,
         paddingHorizontal: 12,
         borderRadius: 16,
         backgroundColor: "#f0f0f0",
         marginRight: 8,
-
+        justifyContent: "center",
+        alignItems: "center",
+        minWidth: 80,
     },
     activeFilterButton: {
         backgroundColor: "#e30019",
@@ -74,12 +69,12 @@ const styles = StyleSheet.create({
     filterButtonText: {
         fontSize: 14,
         color: "#666",
-        paddingVertical: 12
+        textAlign: "center",
     },
     activeFilterButtonText: {
         color: "#fff",
-        fontWeight: "bold",
+        fontWeight: "600", // Giảm độ đậm để tránh ảnh hưởng kích thước
     },
-})
+});
 
-export default FilterBar
+export default FilterBar;

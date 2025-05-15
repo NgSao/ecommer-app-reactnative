@@ -1,5 +1,6 @@
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, StyleSheet } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
+import { formatPrice } from "@utils/formatUtils"
 
 const PromoCodeSection = ({
     promoCode,
@@ -9,9 +10,9 @@ const PromoCodeSection = ({
     applyPromoCode,
     removePromoCode,
     setShowPromoCodesModal,
-    formatPrice,
     calculatePromoDiscount,
     loading,
+    setPromoCodeError
 }) => (
     <View style={styles.section}>
         <Text style={styles.sectionTitle}>Mã giảm giá</Text>

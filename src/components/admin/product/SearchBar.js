@@ -1,22 +1,25 @@
-import { View, TextInput, TouchableOpacity, StyleSheet } from "react-native"
-import { Ionicons } from "@expo/vector-icons"
+import { View, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
-const SearchBar = ({ searchQuery, onSearchChange, onClear }) => (
+const SearchBar = ({ searchQuery, setSearchQuery }) => (
     <View style={styles.searchContainer}>
         <Ionicons name="search-outline" size={20} color="#666" style={styles.searchIcon} />
         <TextInput
             style={styles.searchInput}
-            placeholder="Tìm kiếm sản phẩm..."
+            placeholder="Tìm kiếm theo tên người dùng, bình luận, sản phẩm..."
             value={searchQuery}
-            onChangeText={onSearchChange}
+            onChangeText={setSearchQuery}
         />
         {searchQuery.length > 0 && (
-            <TouchableOpacity style={styles.clearButton} onPress={onClear}>
+            <TouchableOpacity
+                style={styles.clearButton}
+                onPress={() => setSearchQuery("")}
+            >
                 <Ionicons name="close-circle" size={20} color="#666" />
             </TouchableOpacity>
         )}
     </View>
-)
+);
 
 const styles = StyleSheet.create({
     searchContainer: {
@@ -39,6 +42,6 @@ const styles = StyleSheet.create({
     clearButton: {
         padding: 5,
     },
-})
+});
 
-export default SearchBar
+export default SearchBar;

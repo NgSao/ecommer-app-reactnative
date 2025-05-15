@@ -7,32 +7,43 @@ const Specifications = ({ specifications }) => {
     const toggleShowAll = () => {
         setShowAll(!showAll);
     }
+    const specificationArray = specifications
+        ? specifications
+            .split(/\.\s*/)
+            .map(item => {
+                const [label, ...rest] = item.split(":");
+                return label && rest.length > 0
+                    ? {
+                        label: label.trim(),
+                        value: rest.join(":").trim(),
+                    }
+                    : null;
+            })
+            .filter(Boolean)
+        : [];
+
+    if (specificationArray.length === 0) return null;
+
 
     return (
         <View style={styles.specificationsContainer}>
             <Text style={styles.sectionTitle}>Thông số kỹ thuật</Text>
 
-            {specifications && specifications.length > 0 ? (
-                // Hiển thị danh sách thông số, nếu showAll là false, chỉ hiển thị 5 thông số đầu tiên
-                (showAll ? specifications : specifications.slice(0, 5)).map((spec, index) => (
-                    <View key={index} style={styles.specRow}>
-                        <Text style={styles.specLabel}>{spec.label}</Text>
-                        <Text style={styles.specValue}>{spec.value}</Text>
-                    </View>
-                ))
-            ) : (
-                // Nếu không có thông số từ props, hiển thị thông số mặc định
-                <>
+            {(showAll ? specificationArray : specificationArray.slice(0, 5)).map((spec, index) => (
+                <View key={index} style={styles.specRow}>
+                    <Text style={styles.specLabel}>{spec.label}</Text>
+                    <Text style={styles.specValue}>{spec.value}</Text>
+                </View>
+            ))}
 
-                </>
+            {specificationArray.length > 5 && (
+                <TouchableOpacity style={styles.viewMoreButton} onPress={toggleShowAll}>
+                    <Text style={styles.viewMoreText}>
+                        {showAll ? "Ẩn bớt thông số" : "Xem thêm thông số"}
+                    </Text>
+                    <Ionicons name={showAll ? "chevron-up" : "chevron-down"} size={16} color="#e30019" />
+                </TouchableOpacity>
             )}
-
-            <TouchableOpacity style={styles.viewMoreButton} onPress={toggleShowAll}>
-                <Text style={styles.viewMoreText}>
-                    {showAll ? "Ẩn bớt thông số" : "Xem thêm thông số"}
-                </Text>
-                <Ionicons name={showAll ? "chevron-up" : "chevron-down"} size={16} color="#e30019" />
-            </TouchableOpacity>
         </View>
     )
 }

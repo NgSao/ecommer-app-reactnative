@@ -7,6 +7,8 @@ const QuickActions = ({ onNavigate }) => {
         { icon: "list-outline", color: "#3498db", bgColor: "rgba(52, 152, 219, 0.1)", label: "Đơn hàng", screen: "AdminOrdersManagement" },
         { icon: "phone-portrait-outline", color: "#2ecc71", bgColor: "rgba(46, 204, 113, 0.1)", label: "Sản phẩm", screen: "AdminProductsManagement" },
         { icon: "grid-outline", color: "#9b59b6", bgColor: "rgba(155, 89, 182, 0.1)", label: "Danh mục", screen: "AdminCategoriesManagement" },
+        { icon: "pricetags-outline", color: "#2980b9", bgColor: "rgba(41, 128, 185, 0.1)", label: "Thương hiệu", screen: "AdminBrandsManagement" },
+
         { icon: "pricetag-outline", color: "#f39c12", bgColor: "rgba(243, 156, 18, 0.1)", label: "Khuyến mãi", screen: "AdminPromotionsManagement" },
         { icon: "people-outline", color: "#e74c3c", bgColor: "rgba(231, 76, 60, 0.1)", label: "Khách hàng", screen: "AdminCustomersManagement" },
         { icon: "download-outline", color: "#34495e", bgColor: "rgba(52, 73, 94, 0.1)", label: "Xuất báo cáo", screen: "AdminExportData" },

@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, Text, StyleSheet } from "react-native"
+import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 
 const FiltersContainer = ({
     showFilters,
@@ -7,11 +7,61 @@ const FiltersContainer = ({
     setPriceRange,
     selectedPriceRange,
     setSelectedPriceRange,
+    selectedBrands,
+    setSelectedBrands,
+    selectedCategories,
+    setSelectedCategories,
+    categories,
+    brands,
 }) => {
-    if (!showFilters) return null
+    if (!showFilters) return null;
 
     return (
         <View style={styles.filtersContainer}>
+            <Text style={styles.filterTitle}>Danh mục</Text>
+            <View style={styles.categoryContainer}>
+                {categories.map((category) => (
+                    <TouchableOpacity
+                        key={category.id}
+                        style={[
+                            styles.categoryButton,
+                            selectedCategories.includes(category.name) && styles.activeCategory,
+                        ]}
+                        onPress={() => {
+                            setSelectedCategories((prev) =>
+                                prev.includes(category.name)
+                                    ? prev.filter((c) => c !== category.name)
+                                    : [...prev, category.name]
+                            );
+                        }}
+                    >
+                        <Text style={styles.categoryText}>{category.name}</Text>
+                    </TouchableOpacity>
+                ))}
+            </View>
+
+            <Text style={styles.filterTitle}>Thương hiệu</Text>
+            <View style={styles.brandContainer}>
+                {brands.map((brand) => (
+                    <TouchableOpacity
+                        key={brand.id}
+                        style={[
+                            styles.brandButton,
+                            selectedBrands.includes(brand.name) && styles.activeBrand,
+                        ]}
+                        onPress={() => {
+                            setSelectedBrands((prev) =>
+                                prev.includes(brand.name)
+                                    ? prev.filter((b) => b !== brand.name)
+                                    : [...prev, brand.name]
+                            );
+                        }}
+                    >
+                        <Text style={styles.brandText}>{brand.name}</Text>
+                    </TouchableOpacity>
+                ))}
+            </View>
+
             <Text style={styles.filterTitle}>Khoảng giá</Text>
             <View style={styles.priceRangeContainer}>
                 <TouchableOpacity
@@ -21,11 +71,11 @@ const FiltersContainer = ({
                     ]}
                     onPress={() => {
                         if (selectedPriceRange === "under5") {
-                            setSelectedPriceRange(null)
-                            setPriceRange({ min: 0, max: 50000000 })
+                            setSelectedPriceRange(null);
+                            setPriceRange({ min: 0, max: 50000000 });
                         } else {
-                            setSelectedPriceRange("under5")
-                            setPriceRange({ min: 0, max: 5000000 })
+                            setSelectedPriceRange("under5");
+                            setPriceRange({ min: 0, max: 5000000 });
                         }
                     }}
                 >
@@ -38,11 +88,11 @@ const FiltersContainer = ({
                     ]}
                     onPress={() => {
                         if (selectedPriceRange === "5to10") {
-                            setSelectedPriceRange(null)
-                            setPriceRange({ min: 0, max: 50000000 })
+                            setSelectedPriceRange(null);
+                            setPriceRange({ min: 0, max: 50000000 });
                         } else {
-                            setSelectedPriceRange("5to10")
-                            setPriceRange({ min: 5000000, max: 10000000 })
+                            setSelectedPriceRange("5to10");
+                            setPriceRange({ min: 5000000, max: 10000000 });
                         }
                     }}
                 >
@@ -55,11 +105,11 @@ const FiltersContainer = ({
                     ]}
                     onPress={() => {
                         if (selectedPriceRange === "10to20") {
-                            setSelectedPriceRange(null)
-                            setPriceRange({ min: 0, max: 50000000 })
+                            setSelectedPriceRange(null);
+                            setPriceRange({ min: 0, max: 50000000 });
                         } else {
-                            setSelectedPriceRange("10to20")
-                            setPriceRange({ min: 10000000, max: 20000000 })
+                            setSelectedPriceRange("10to20");
+                            setPriceRange({ min: 10000000, max: 20000000 });
                         }
                     }}
                 >
@@ -72,11 +122,11 @@ const FiltersContainer = ({
                     ]}
                     onPress={() => {
                         if (selectedPriceRange === "above20") {
-                            setSelectedPriceRange(null)
-                            setPriceRange({ min: 0, max: 50000000 })
+                            setSelectedPriceRange(null);
+                            setPriceRange({ min: 0, max: 50000000 });
                         } else {
-                            setSelectedPriceRange("above20")
-                            setPriceRange({ min: 20000000, max: 50000000 })
+                            setSelectedPriceRange("above20");
+                            setPriceRange({ min: 20000000, max: 50000000 });
                         }
                     }}
                 >
@@ -87,8 +137,8 @@ const FiltersContainer = ({
                 <Text style={styles.applyFilterText}>Áp dụng</Text>
             </TouchableOpacity>
         </View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     filtersContainer: {
@@ -101,6 +151,50 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "bold",
         marginBottom: 10,
+    },
+    categoryContainer: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        marginBottom: 15,
+    },
+    categoryButton: {
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        borderWidth: 1,
+        borderColor: "#ddd",
+        borderRadius: 5,
+        marginRight: 10,
+        marginBottom: 10,
+    },
+    activeCategory: {
+        borderColor: "#e30019",
+        backgroundColor: "#fff0f0",
+    },
+    categoryText: {
+        fontSize: 14,
+        color: "#666",
+    },
+    brandContainer: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        marginBottom: 15,
+    },
+    brandButton: {
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        borderWidth: 1,
+        borderColor: "#ddd",
+        borderRadius: 5,
+        marginRight: 10,
+        marginBottom: 10,
+    },
+    activeBrand: {
+        borderColor: "#e30019",
+        backgroundColor: "#fff0f0",
+    },
+    brandText: {
+        fontSize: 14,
+        color: "#666",
     },
     priceRangeContainer: {
         flexDirection: "row",
@@ -135,6 +229,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: "bold",
     },
-})
+});
 
-export default FiltersContainer
+export default FiltersContainer;

@@ -1,23 +1,23 @@
 import { View, Text, StyleSheet } from "react-native"
 
-const CustomerStats = ({ customers }) => {
+const CustomerStats = ({ customers, totalCustomers }) => {
     return (
         <View style={styles.statsContainer}>
             <View style={styles.statItem}>
-                <Text style={styles.statValue}>{customers.length}</Text>
+                <Text style={styles.statValue}>{totalCustomers}</Text>
                 <Text style={styles.statLabel}>Tổng số</Text>
             </View>
             <View style={styles.statItem}>
                 <Text style={styles.statValue}>
-                    {customers.filter((customer) => customer.status === "active").length}
+                    {customers.filter((customer) => customer.status === "ACTIVE").length}
                 </Text>
                 <Text style={styles.statLabel}>Hoạt động</Text>
             </View>
             <View style={styles.statItem}>
                 <Text style={styles.statValue}>
-                    {customers.filter((customer) => customer.status === "new").length}
+                    {customers.filter((customer) => customer.status === "INACTIVE").length}
                 </Text>
-                <Text style={styles.statLabel}>Mới</Text>
+                <Text style={styles.statLabel}>Chưa kích hoạt</Text>
             </View>
         </View>
     )

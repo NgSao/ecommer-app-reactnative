@@ -1,6 +1,7 @@
+import { formatPrice } from "@utils/formatUtils"
 import { View, Text, StyleSheet } from "react-native"
 
-const SummarySection = ({ calculateSubtotal, calculateDiscount, calculateTotal, formatPrice }) => (
+const SummarySection = ({ calculateSubtotal, calculateDiscount, calculateTotal }) => (
     <View style={styles.summaryContainer}>
         <Text style={styles.summaryTitle}>Tóm tắt đơn hàng</Text>
         <View style={styles.summaryRow}>

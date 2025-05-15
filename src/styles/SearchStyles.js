@@ -18,6 +18,17 @@ const styles = StyleSheet.create({
     searchResultsContainer: {
         padding: 10,
     },
+    errorContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 20,
+    },
+    errorText: {
+        fontSize: 16,
+        color: "#333",
+        textAlign: "center",
+    },
 })
 
 export default styles

@@ -1,5 +1,6 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
+import { formatPrice } from "@utils/formatUtils"
 
 const PromoCodeSection = ({
     promoCode,
@@ -8,7 +9,6 @@ const PromoCodeSection = ({
     promoError,
     applyPromoCode,
     removePromoCode,
-    formatPrice,
     calculateDiscount,
 }) => (
     <View style={styles.promoContainer}>
@@ -19,6 +19,7 @@ const PromoCodeSection = ({
                     <Text style={styles.appliedPromoCode}>{appliedPromo.code}</Text>
                     <Text style={styles.appliedPromoDescription}>{appliedPromo.description}</Text>
                     <Text style={styles.appliedPromoDiscount}>Giảm: {formatPrice(calculateDiscount())}</Text>
+
                 </View>
                 <TouchableOpacity style={styles.removePromoButton} onPress={removePromoCode}>
                     <Ionicons name="close-circle" size={24} color="#e30019" />

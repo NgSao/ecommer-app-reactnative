@@ -10,24 +10,51 @@ const ProductInfo = ({
     getStockStatusText,
     getStockStatusColor,
 }) => {
+    const promotionsArray = product.promotions
+        ? product.promotions
+            .split(/\.\s*/)
+            .map(p => p.trim())
+            .filter(p => p)
+        : [];
+
     return (
         <View style={styles.infoContainer}>
             <Text style={styles.productName}>
-                {product.name} {selectedVariant ? `- ${selectedVariant.color} ${selectedVariant.storage}` : ""}
+                {product.name}
+                {selectedVariant && selectedVariant.storage
+                    ? ` - ${selectedVariant.color} ${selectedVariant.storage}`
+                    : ""}
+
             </Text>
             <View style={styles.ratingContainer}>
                 {renderRatingStars(product.rating || 0)}
                 <Text style={styles.ratingText}>({product.ratingCount || 0} đánh giá)</Text>
             </View>
             <View style={styles.priceContainer}>
-                {selectedVariant && (
+                {selectedVariant ? (
                     <>
-                        <Text style={styles.productPrice}>{formatPrice(selectedVariant.price)}</Text>
-                        {selectedVariant.originalPrice > selectedVariant.price && (
-                            <Text style={styles.originalPrice}>{formatPrice(selectedVariant.originalPrice)}</Text>
+                        <Text style={styles.productPrice}>
+                            {formatPrice(selectedVariant.price === 0 ? selectedVariant.originalPrice : selectedVariant.price)}
+                        </Text>
+                        {selectedVariant.originalPrice > selectedVariant.price && selectedVariant.price !== 0 && (
+                            <Text style={styles.originalPrice}>
+                                {formatPrice(selectedVariant.originalPrice)}
+                            </Text>
+                        )}
+                    </>
+                ) : (
+                    <>
+                        <Text style={styles.productPrice}>
+                            {formatPrice(product.price === 0 ? product.originalPrice : product.price)}
+                        </Text>
+                        {product.originalPrice > product.price && product.price !== 0 && (
+                            <Text style={styles.originalPrice}>
+                                {formatPrice(product.originalPrice)}
+                            </Text>
                         )}
                     </>
                 )}
+
             </View>
             <View style={styles.stockContainer}>
                 <Text style={[styles.stockStatus, { color: getStockStatusColor() }]}>{getStockStatusText()}</Text>
@@ -54,9 +81,10 @@ const ProductInfo = ({
                     )}
                 </View>
             )}
-            {product.promotions && product.promotions.length > 0 && (
+
+            {product.promotions && promotionsArray.length > 0 && (
                 <View style={styles.promotionContainer}>
-                    {product.promotions.map((promo, index) => (
+                    {promotionsArray.map((promo, index) => (
                         <View key={index} style={styles.promotionItem}>
                             <Ionicons name="gift-outline" size={16} color="#e30019" style={styles.promotionIcon} />
                             <Text style={styles.promotionText}>{promo}</Text>

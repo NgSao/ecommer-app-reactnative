@@ -4,10 +4,10 @@ const StatsBar = ({ promotions }) => {
     const now = new Date()
     const totalPromotions = promotions.length
     const activePromotions = promotions.filter(
-        (promo) => promo.isActive && new Date(promo.startDate) <= now && new Date(promo.endDate) >= now
+        (promo) => promo.active && new Date(promo.startDate) <= now && new Date(promo.endDate) >= now
     ).length
     const upcomingPromotions = promotions.filter(
-        (promo) => promo.isActive && new Date(promo.startDate) > now
+        (promo) => promo.active && new Date(promo.startDate) > now
     ).length
 
     return (

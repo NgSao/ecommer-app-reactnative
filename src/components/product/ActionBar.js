@@ -7,29 +7,37 @@ const ActionBar = ({
     handleAddToCart,
     handleBuyNow,
     selectedVariant,
+    product,
 }) => (
     <View style={styles.actionBar}>
         <TouchableOpacity style={styles.wishlistButton} onPress={handleAddToWishlist}>
             <Ionicons
-                name={isInWishlist(selectedVariant?.id) ? "heart" : "heart-outline"}
+                name={isInWishlist(selectedVariant ? selectedVariant.id : product?.id) ? "heart" : "heart-outline"}
                 size={24}
-                color={isInWishlist(selectedVariant?.id) ? "#e30019" : "#333"}
+                color={isInWishlist(selectedVariant ? selectedVariant.id : product?.id) ? "#e30019" : "#333"}
             />
         </TouchableOpacity>
         <TouchableOpacity
             style={[
                 styles.addToCartButton,
-                (!selectedVariant || selectedVariant.stock <= 0) && styles.disabledActionButton,
+                (selectedVariant
+                    ? selectedVariant.stock <= 0
+                    : !product || product.stock <= 0) && styles.disabledActionButton,
             ]}
             onPress={handleAddToCart}
-            disabled={!selectedVariant || selectedVariant.stock <= 0}
+            disabled={selectedVariant ? selectedVariant.stock <= 0 : !product || product.stock <= 0}
         >
             <Text style={styles.addToCartText}>Thêm vào giỏ hàng</Text>
         </TouchableOpacity>
         <TouchableOpacity
-            style={[styles.buyNowButton, (!selectedVariant || selectedVariant.stock <= 0) && styles.disabledActionButton]}
+            style={[
+                styles.buyNowButton,
+                (selectedVariant
+                    ? selectedVariant.stock <= 0
+                    : !product || product.stock <= 0) && styles.disabledActionButton,
+            ]}
             onPress={handleBuyNow}
-            disabled={!selectedVariant || selectedVariant.stock <= 0}
+            disabled={selectedVariant ? selectedVariant.stock <= 0 : !product || product.stock <= 0}
         >
             <Text style={styles.buyNowText}>Mua ngay</Text>
         </TouchableOpacity>

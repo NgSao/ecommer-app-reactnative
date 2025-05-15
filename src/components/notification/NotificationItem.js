@@ -1,7 +1,8 @@
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
+import { formatDateNotification } from "@utils/formatUtils"
 
-const NotificationItem = ({ item, handleNotificationPress, deleteNotification, getNotificationIcon, formatDate }) => (
+const NotificationItem = ({ item, handleNotificationPress, deleteNotification, getNotificationIcon }) => (
     <TouchableOpacity
         style={[styles.notificationItem, item.read ? styles.readNotification : styles.unreadNotification]}
         onPress={() => handleNotificationPress(item)}
@@ -14,7 +15,7 @@ const NotificationItem = ({ item, handleNotificationPress, deleteNotification, g
             <Text style={styles.notificationMessage} numberOfLines={2}>
                 {item.message}
             </Text>
-            <Text style={styles.notificationDate}>{formatDate(item.date)}</Text>
+            <Text style={styles.notificationDate}>{formatDateNotification(item.date)}</Text>
         </View>
         <TouchableOpacity style={styles.deleteButton} onPress={() => deleteNotification(item.id)}>
             <Ionicons name="trash-outline" size={20} color="#999" />

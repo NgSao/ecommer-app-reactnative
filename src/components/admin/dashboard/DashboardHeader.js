@@ -4,10 +4,10 @@ import { Ionicons } from "@expo/vector-icons"
 const DashboardHeader = ({ user, onNavigateToUserApp, onNavigateToSettings, onLogout }) => (
     <View style={styles.header}>
         <View style={styles.headerLeft}>
-            <Image source={{ uri: user?.avatar || "https://ui-avatars.com/api/?name=Admin" }} style={styles.avatar} />
+            <Image source={{ uri: user?.avatar || "https://cdn-icons-png.flaticon.com/512/9703/9703596.png" }} style={styles.avatar} />
             <View>
                 <Text style={styles.welcomeText}>Xin chào,</Text>
-                <Text style={styles.userName}>{user?.name || "Admin"}</Text>
+                <Text style={styles.userName}>{user?.fullName || "Admin"}</Text>
             </View>
         </View>
         <View style={styles.headerRight}>

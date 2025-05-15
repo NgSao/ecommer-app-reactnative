@@ -5,15 +5,15 @@ const ShippingInfoSection = ({ shipping }) => (
         <Text style={styles.sectionTitle}>Thông tin giao hàng</Text>
         <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Người nhận:</Text>
-            <Text style={styles.infoValue}>{shipping.address.recipient}</Text>
+            <Text style={styles.infoValue}>{shipping.fullName}</Text>
         </View>
         <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Số điện thoại:</Text>
-            <Text style={styles.infoValue}>{shipping.address.phone}</Text>
+            <Text style={styles.infoValue}>{shipping.phone}</Text>
         </View>
         <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Địa chỉ:</Text>
-            <Text style={styles.infoValue}>{shipping.address.address}</Text>
+            <Text style={styles.infoValue}>{shipping.addressDetail}</Text>
         </View>
         <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Phương thức:</Text>

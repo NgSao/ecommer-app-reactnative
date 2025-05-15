@@ -31,9 +31,9 @@ const ChartSection = ({ revenueData, categoryData, orderStatusData, onExport, on
         <View style={styles.sectionContainer}>
             <View style={styles.sectionHeader}>
                 <Text style={styles.sectionTitle}>Doanh thu 6 tháng gần nhất</Text>
-                <TouchableOpacity onPress={onViewRevenueReport}>
+                {/* <TouchableOpacity onPress={onViewRevenueReport}>
                     <Text style={styles.viewMoreText}>Xem chi tiết</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </View>
             <LineChart
                 data={revenueData}
@@ -44,7 +44,7 @@ const ChartSection = ({ revenueData, categoryData, orderStatusData, onExport, on
                 style={styles.chart}
             />
         </View>
-        <View style={styles.sectionContainer}>
+        {/* <View style={styles.sectionContainer}>
             <View style={styles.sectionHeader}>
                 <Text style={styles.sectionTitle}>Doanh thu theo danh mục</Text>
                 <TouchableOpacity onPress={onViewCategoryReport}>
@@ -61,7 +61,7 @@ const ChartSection = ({ revenueData, categoryData, orderStatusData, onExport, on
                 paddingLeft="15"
                 absolute
             />
-        </View>
+        </View> */}
         <View style={styles.sectionContainer}>
             <View style={styles.sectionHeader}>
                 <Text style={styles.sectionTitle}>Trạng thái đơn hàng</Text>
